@@ -28,14 +28,20 @@ if(global.environment==='development') {
       rejectUnauthorized: false,
     },
   });
+  global.apiUrl = 'http://localhost:8081';
+  global.wsUrl = 'ws://localhost:8081';
+
 }
 else {
-  const pool = new Pool({
+  global.pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false,
     },
   });
+
+  global.apiUrl = 'https://talkey-chat.herokuapp.com';
+  global.wsUrl = 'ws://talkey-chat.herokuapp.com';
 }
 
 const userController = require('./controllers/users');

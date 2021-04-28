@@ -9,10 +9,8 @@
     <script>
 
         const Http = new XMLHttpRequest();
-        const urlDev = 'http://localhost:8081/signUp';
-        const urlProd ='https://talkey-chat.herokuapp.com/signUp';
         const data = `{ "username" : "bruno_mond2", "email" : "bruno_mond2@hotmail.com", "password" : "123mudar" }`
-        Http.open("POST", urlProd, data);
+        Http.open("POST", global.apiUrl, data);
         Http.setRequestHeader("Content-type", "application/json");
         Http.send(data);
 
@@ -20,7 +18,7 @@
             console.log(Http.responseText)
         }
 
-      const socket = io("ws://localhost:8081");
+      const socket = io(global.wsUrl);
       window.bruno = socket;
       console.log('Teste');
       socket.on("connect", () => {
