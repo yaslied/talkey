@@ -1,0 +1,32 @@
+<html>
+<head>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+</head>
+<body>
+    Just Site Cliente
+
+
+    <script>
+      const socket = io("ws://localhost:8081");
+      window.bruno = socket;
+      console.log('Teste');
+      socket.on("connect", () => {
+        // either with send()
+       // socket.send("Hello!");
+        // or with emit() and custom event names
+        socket.emit("chatJoin", 'ASDSDSFSDF');
+      });
+
+      // handle the event sent with socket.send()
+      socket.on("newMessage", data => {
+        console.log('newMessage', data);
+      });
+
+      //
+      // // handle the event sent with socket.emit()
+      // socket.on("greetings", (elem1, elem2, elem3) => {
+      //   console.log(elem1, elem2, elem3);
+      // });
+    </script>
+</body>
+</html>

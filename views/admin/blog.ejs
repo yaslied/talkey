@@ -1,0 +1,109 @@
+<html lang="pt">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title><%= post.name %> </title>
+
+    <style>
+        body {
+            font-family: Roboto;
+            height: 100%!important;
+            padding: 0;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .box {
+            /*text-align: center;*/
+            color: #2b3342;
+            height: 100%;
+            padding: 0;
+        }
+
+        .content {
+        }
+
+        .container {
+            /*text-align: center;*/
+            /*height: 708px;*/
+            margin: 0 auto;
+            width: 830px;
+        }
+
+
+        @media screen and (max-width: 920px) {
+            .container {
+                width: 95%;
+            }
+        }
+
+        @media screen and (max-height: 800px) {
+            .container {
+                margin-top: 15px;
+                margin-bottom: 30px;
+            }
+        }
+
+
+        .body {
+            /*text-align: center;*/
+            padding-top: 30px;
+            padding-bottom: 40px;
+        }
+
+
+        .description {
+            padding: 15px;
+        }
+
+        .name {
+            font-size: 32px;
+            color: rgb(62, 67, 73);
+            margin-bottom: 10px;
+        }
+        .imgUrl {
+            display: flex;
+            justify-content: center;
+        }
+        .imgUrl img{
+            max-width: 100%;
+        }
+        .txt {
+            font-size: 16px;
+            color: rgb(89, 89, 89);
+        }
+
+
+    </style>
+
+</head>
+<body>
+<div class="box">
+    <div class="content floxcol">
+        <div class="container flexcol">
+            <div class="body">
+                <div class="name">
+                    <%= post.name %>
+                </div>
+                <div class="imgUrl">
+                    <img src="<%= post.imgUrl %>" />
+                </div>
+                <div class="txt">
+                    <%- post.txt %>
+                </div>
+                <% if(post.notFound) {%>
+                    Blog não encontrado
+                <% }%>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</body>
+</html>

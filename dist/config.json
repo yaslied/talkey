@@ -1,0 +1,10 @@
+{
+  "comment": "Arquivo para ser utilizado apenas em desenvolvimento sem o node, em produção esse arquivo é ignorado",
+  "isOk": true,
+  "isTemporary": false,
+  "slug": "",
+  "host": "localhost:8081",
+  "company": {
+    "id": "UmIdQualquer"
+  }
+}
