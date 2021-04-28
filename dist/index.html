@@ -9,9 +9,10 @@
     <script>
 
         const Http = new XMLHttpRequest();
-        const url='http://localhost:8081/signUp';
+        const urlDev = 'http://localhost:8081/signUp';
+        const urlProd ='https://talkey-chat.herokuapp.com/signUp';
         const data = `{ "username" : "bruno_mond2", "email" : "bruno_mond2@hotmail.com", "password" : "123mudar" }`
-        Http.open("POST", url, data);
+        Http.open("POST", urlProd, data);
         Http.setRequestHeader("Content-type", "application/json");
         Http.send(data);
 
