@@ -3,10 +3,22 @@
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 </head>
 <body>
-    Just Site Cliente
+    Talkey chat server
 
 
     <script>
+
+        const Http = new XMLHttpRequest();
+        const url='http://localhost:8081/signUp';
+        const data = `{ "username" : "bruno_mond2", "email" : "bruno_mond2@hotmail.com", "password" : "123mudar" }`
+        Http.open("POST", url, data);
+        Http.setRequestHeader("Content-type", "application/json");
+        Http.send(data);
+
+        Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+        }
+
       const socket = io("ws://localhost:8081");
       window.bruno = socket;
       console.log('Teste');

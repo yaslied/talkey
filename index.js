@@ -17,14 +17,16 @@ global.environment = process.env.NODE_ENV || 'development';
 
 const {Pool} = require('pg');
 
-
 if(global.environment==='development') {
   global.pool = new Pool({
-    user: "me",
-    host: "localhost",
-    database: "api",
-    password: "password",
+    user: "eqbuarubtngscp",
+    host: "ec2-3-233-7-12.compute-1.amazonaws.com",
+    database: "des3ueomk92hc2",
+    password: "9f05b5aaeb99b04334115b0a2be4bb79f8ae288060ac2e54ce9c1befc3e68dac",
     port: 5432,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   });
 }
 else {
@@ -36,8 +38,7 @@ else {
   });
 }
 
-
-const adminController = require('./controllers/admin');
+const userController = require('./controllers/users');
 const messagesController = require('./controllers/messages');
 const queryModel = require('./models/query');
 
@@ -54,30 +55,22 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
-
-
-app.get('/api/blog/:id?', adminController.blog);
-app.get('/api/page/:id', adminController.page);
+// app.get('/api/blog/:id?', adminController.blog);
+// app.get('/api/page/:id', adminController.page);
 
 app.get('/getMessages/:id', messagesController.getMessages);
-
-app.get('/teste', (req, res, next)=> {
-  // req.params
-  // req.query
-  // req.body
-  console.log('EAE');
-  res.send('EAE tudo tranquilo');
- // next();
-});
-app.get('/teste2', (req, res)=>{
-  res.json({asd: 'sdsd', pppp: 'wqeqwe'});
-});
-
-
-
-
-
-
+app.post('/signUp', userController.createUser);
+// app.get('/teste', (req, res, next)=> {
+//   // req.params
+//   // req.query
+//   // req.body
+//   console.log('EAE');
+//   res.send('EAE tudo tranquilo');
+//  // next();
+// });
+// app.get('/teste2', (req, res)=>{
+//   res.json({asd: 'sdsd', pppp: 'wqeqwe'});
+// });
 
 
 // Busca arquivos na pasta Dist
