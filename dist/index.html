@@ -10,7 +10,7 @@
 
         const Http = new XMLHttpRequest();
         const data = `{ "username" : "bruno_mond2", "email" : "bruno_mond2@hotmail.com", "password" : "123mudar" }`
-        Http.open("POST", global.apiUrl, data);
+        Http.open("POST", "https://talkey-chat.herokuapp.com", data);
         Http.setRequestHeader("Content-type", "application/json");
         Http.send(data);
 
@@ -18,20 +18,20 @@
             console.log(Http.responseText)
         }
 
-      const socket = io(global.wsUrl);
-      window.bruno = socket;
-      console.log('Teste');
-      socket.on("connect", () => {
-        // either with send()
-       // socket.send("Hello!");
-        // or with emit() and custom event names
-        socket.emit("chatJoin", 'ASDSDSFSDF');
-      });
-
-      // handle the event sent with socket.send()
-      socket.on("newMessage", data => {
-        console.log('newMessage', data);
-      });
+      // const socket = io(global.wsUrl);
+      // window.bruno = socket;
+      // console.log('Teste');
+      // socket.on("connect", () => {
+      //   // either with send()
+      //  // socket.send("Hello!");
+      //   // or with emit() and custom event names
+      //   socket.emit("chatJoin", 'ASDSDSFSDF');
+      // });
+      //
+      // // handle the event sent with socket.send()
+      // socket.on("newMessage", data => {
+      //   console.log('newMessage', data);
+      // });
 
       //
       // // handle the event sent with socket.emit()
