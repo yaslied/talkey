@@ -10,7 +10,7 @@
 
         const Http = new XMLHttpRequest();
         const data = `{ "username" : "bruno_mond2", "email" : "bruno_mond2@hotmail.com", "password" : "123mudar" }`
-        Http.open("POST", "https://talkey-chat.herokuapp.com", data);
+        Http.open("POST", "https://talkey-chat.herokuapp.com/signUp", data);
         Http.setRequestHeader("Content-type", "application/json");
         Http.send(data);
 
