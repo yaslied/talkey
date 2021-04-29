@@ -1,25 +1,57 @@
 {
-  "name": "justsitesclientes",
+  "name": "talkey",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js --watch ./ --watch common",
-    "serverStaticForDev": "ws"
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "build": "vue-cli-service build --modern",
+    "start": "node server/index.js",
+    "lint": "vue-cli-service lint",
+    "client": "vue-cli-service serve",
+    "server": "nodemon server/index.js --watch ./server",
+    "serverStaticForDev": "ws",
+    "heroku-postbuild": "npm install pm2 -g && npm install && npm install --only=dev && npm run build"
   },
   "dependencies": {
+    "@mdi/js": "^5.9.55",
+    "core-js": "^3.6.5",
+    "css-aliases": "^1.1.10",
+    "express-http-proxy": "^1.6.2",
+    "font-awesome": "^4.7.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0",
+    "webpack": "^4.46.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "^4.5.12",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "babel-eslint": "^10.1.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
+    "concurrently": "^6.0.2",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "ejs": "^3.1.6",
-    "express": "~4.16.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^6.2.2",
+    "express": "^4.17.1",
+    "html-webpack-plugin": "^3.2.0",
     "local-web-server": "^4.2.1",
+    "node-sass": "^4.12.0",
     "nodemon": "^2.0.7",
     "path": "^0.12.7",
     "pg": "^8.6.0",
+    "prettier": "^2.2.1",
+    "sass-loader": "^8.0.2",
     "socket.io": "^4.0.1",
-    "socket.io-client": "^4.0.1"
+    "socket.io-client": "^4.0.1",
+    "vue-template-compiler": "^2.6.11"
   },
   "engines": {
     "node": "12.18.4"

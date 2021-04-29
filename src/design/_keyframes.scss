@@ -1,0 +1,173 @@
+/*
+animation: bellshake .5s cubic-bezier(.36,.07,.19,.97) both;
+backface-visibility: hidden;
+transform-origin: top right;
+*/
+@keyframes bellshake {
+  0% {
+    transform: rotate(0);
+  }
+
+  15% {
+    transform: rotate(5deg);
+  }
+
+  30% {
+    transform: rotate(-5deg);
+  }
+
+  45% {
+    transform: rotate(4deg);
+  }
+
+  60% {
+    transform: rotate(-4deg);
+  }
+
+  75% {
+    transform: rotate(2deg);
+  }
+
+  85% {
+    transform: rotate(-2deg);
+  }
+
+  92% {
+    transform: rotate(1deg);
+  }
+
+  100% {
+    transform: rotate(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+/*
+animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+backface-visibility: hidden;
+perspective: 1000px;
+*/
+
+.element-animation {
+  -webkit-animation: fadeIn ease 1s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-transform-origin: 50% 50%;
+  -webkit-animation-fill-mode: forwards; /*Chrome 16+, Safari 4+*/
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(0px, -16px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(0px, 0px);
+  }
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(0, 2px, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(0, 1px, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(0, 2px, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(0, 1px, 0);
+  }
+}
+
+@keyframes appearLeft {
+  0% {
+    width: 0px;
+    opacity: 0;
+    -webkit-transform: translateX(10px);
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+    -webkit-transform: translateX(0px);
+  }
+}
+
+@keyframes appearLeftReverse {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateX(0px);
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateX(20px);
+  }
+}
+
+// #animations
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @-ms-keyframes #{$animation-name} {
+    @content;
+  }
+  @-o-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+  -moz-animation: #{$str};
+  -ms-animation: #{$str};
+  -o-animation: #{$str};
+  animation: #{$str};
+}
+
+/*
+// Define animation name, and properties
+@include keyframes(fade-out) {
+  0% { opacity: 1; }
+  90% { opacity: 0; }
+}
+// Add animation to element
+.element {
+  width: 100px;
+  height: 100px;
+  background: black;
+  @include animation('fade-out 5s 3');
+}
+*/

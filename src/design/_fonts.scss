@@ -1,0 +1,71 @@
+$primary-font: 'Roboto', sans-serif;
+$secondary-font: 'Montserrat', sans-serif;
+$input-font: 'Roboto', sans-serif;
+
+$font-path: '../assets/fonts/';
+$roboto-font-path: '../assets/fonts/Roboto/';
+$opensans-font-path: '../assets/fonts/Open_Sans/';
+
+// @font-face {
+//   font-family: 'fontname';
+//   src: url('fontname.ttf') format('truetype');
+//   font-weight: normal;
+//   font-style: normal;
+// }
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('#{$roboto-font-path}/Roboto-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Bold';
+  src: url('#{$roboto-font-path}/Roboto-Bold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Light';
+  src: url('#{$roboto-font-path}/Roboto-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Thin';
+  src: url('#{$roboto-font-path}/Roboto-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+// Open
+@font-face {
+  font-family: 'Open Sans';
+  src: url('#{$opensans-font-path}/OpenSans-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans Bold';
+  src: url('#{$opensans-font-path}/OpenSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans Light';
+  src: url('#{$opensans-font-path}/OpenSans-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Open Sans Semi Bold';
+  src: url('#{$opensans-font-path}/OpenSans-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}

@@ -4,6 +4,7 @@ const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const proxy = require('express-http-proxy');
 const url = require('url');
 
 const app = express();
@@ -28,8 +29,8 @@ if(global.environment==='development') {
       rejectUnauthorized: false,
     },
   });
-  global.apiUrl = 'http://localhost:8081';
-  global.wsUrl = 'ws://localhost:8081';
+//  global.apiUrl = 'http://localhost:8081';
+//  global.wsUrl = 'ws://localhost:8081';
 
 }
 else {
@@ -40,8 +41,8 @@ else {
     },
   });
 
-  global.apiUrl = 'https://talkey-chat.herokuapp.com';
-  global.wsUrl = 'ws://talkey-chat.herokuapp.com';
+//  global.apiUrl = 'https://talkey-chat.herokuapp.com';
+//  global.wsUrl = 'ws://talkey-chat.herokuapp.com';
 }
 
 const userController = require('./controllers/users');
@@ -74,17 +75,25 @@ app.post('/signUp', userController.createUser);
 //   res.send('EAE tudo tranquilo');
 //  // next();
 // });
-// app.get('/teste2', (req, res)=>{
-//   res.json({asd: 'sdsd', pppp: 'wqeqwe'});
-// });
+app.get('/teste2', (req, res)=>{
+  res.json({asd: 'sdsd', pppp: 'wqeqwe'});
+});
 
 
 // Busca arquivos na pasta Dist
-app.use(express.static(path.join(__dirname, './dist')));
-// Handle React routing, return all requests to React app
-app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, './dist', 'index.html'));
-});
+if (process.env.NODE_ENV === 'production') {
+  console.log('Start production', __dirname);
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, '../dist')));
+  // Handle React routing, return all requests to React app
+  app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+  });
+}
+else {
+  app.use(proxy('localhost:8080'));
+  console.log('Start dev', __dirname);
+}
 
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 

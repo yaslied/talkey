@@ -1,0 +1,63 @@
+// GRID
+$size-grid-padding: 1.3rem;
+
+// CONTENT
+$size-content-width-max: 65rem;
+$size-content-width-min: 14rem;
+
+// INPUTS
+$size-input-padding-vertical: 0.75em;
+$size-input-padding-horizontal: 1em;
+$size-input-padding: $size-input-padding-vertical $size-input-padding-horizontal;
+$size-input-border: 1px;
+$size-input-border-radius: (1em + $size-input-padding-vertical * 2) / 10;
+
+// BUTTONS
+$size-button-padding-vertical: $size-grid-padding / 2;
+$size-button-padding-horizontal: $size-grid-padding / 1.5;
+$size-button-padding: $size-button-padding-vertical
+  $size-button-padding-horizontal;
+
+// MENU
+$size-company-menu-max: 1050;
+$size-company-order-menu-max: 1400;
+$size-admin-menu-max: 1050;
+$size-client-menu-max: 1050;
+
+$size-menu-actions: 700;
+
+// MENU - ICON
+$menu-icon-size: 26px;
+
+// NAV BAR
+$height-nav-bar: 118;
+$size-nav-bar-width-max: 1382;
+
+$slin-height-navbar: 80px;
+$max-width-navbar: 1400px;
+
+// FOOTER
+$slin-height-footer: 80px;
+
+// SIDEBAR
+$size-company-sidebar: 250;
+$size-company-order-sidebar: 250;
+$size-company-sidebar-MxWidth: 300;
+
+$size-admin-sidebar: 290;
+
+$size-client-sidebar: 275;
+$size-client-sidebar-MxWidth: 400px;
+$size-client-sidebar-collapsed: 60px;
+
+// CHAT
+$size-client-chat-contacts: 300px;
+$size-client-chat-contacts-margin: 300;
+
+$minify-chat: 45px;
+$large-chat-desktop-down: 300px;
+$large-chat-desktop-up: 320px;
+
+// reset expansion panel vueitfy
+$expansion-panel-content-padding: 4px;
+

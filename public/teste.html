@@ -10,15 +10,15 @@
 
         const Http = new XMLHttpRequest();
         const data = `{ "username" : "bruno_mond2", "email" : "bruno_mond2@hotmail.com", "password" : "123mudar" }`
-        Http.open("POST", global.apiUrl, data);
+        Http.open("POST", "/signUp");
         Http.setRequestHeader("Content-type", "application/json");
         Http.send(data);
 
         Http.onreadystatechange = (e) => {
-            console.log(Http.responseText)
+            console.log("Resposta", Http.responseText);
         }
 
-      const socket = io(global.wsUrl);
+      const socket = io('/');
       window.bruno = socket;
       console.log('Teste');
       socket.on("connect", () => {
