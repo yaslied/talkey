@@ -1,0 +1,55 @@
+
+// screen old pattern
+@mixin for-phone-only {
+    @media (max-width: 576px) {
+      @content;
+    }
+  }
+  
+  @mixin for-large-phones {
+    @media (max-width: 668px) {
+      @content;
+    }
+  }
+  
+  @mixin for-tablet-portrait-up {
+    @media (min-width: 600px) {
+      @content;
+    }
+  }
+  
+  @mixin for-tablet-portrait-only {
+    @media (min-width: 600px) and (max-width: 1024px) {
+      @content;
+    }
+  }
+  
+  @mixin for-tablet-landscape-up {
+    @media (min-width: 900px) {
+      @content;
+    }
+  }
+  
+  @mixin for-tablet-landscape-only {
+    @media (min-width: 900px) and (max-width: 1199px) {
+      @content;
+    }
+  }
+  
+  @mixin for-desktop-up {
+    @media (min-width: 1300px) and (min-height: 800px) {
+      @content;
+    }
+  }
+  
+  @mixin for-desktop-down {
+    @media (max-width: 1300px) and (max-height: 800px) {
+      @content;
+    }
+  }
+  
+  @mixin for-big-desktop-up {
+    @media (min-width: 1800px) {
+      @content;
+    }
+  }
