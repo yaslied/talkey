@@ -15,7 +15,9 @@
         Http.send(data);
 
         Http.onreadystatechange = (e) => {
-            console.log("Resposta", Http.responseText);
+            if(Http.readyState===4) {
+                console.log("Resposta", Http.responseText);
+            }
         }
 
       const socket = io('/');
