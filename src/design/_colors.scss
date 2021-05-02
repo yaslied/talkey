@@ -6,6 +6,7 @@ $terciary-color: #FFA40A;
 $background-color: #323739;
 
 $text-color: #2b3342;
+$soft-black: rgba(0, 0, 0, 0.6);
 
 // #background 
 $bg-light: #ffffff;
@@ -78,4 +79,4 @@ $soft-shadow-1: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
 $button-shadow: 0 0 0 1px #e0e0e0, 0 2px 4px 0 rgba(0, 0, 0, 0.07),
   0 1px 1.5px 0 rgba(0, 0, 0, 0.05);
   
-$v-shadow: 0 -4px 16px 0 rgb(50 50 105 / 4%);
+$v-shadow: 0 -4px 16px 0 rgba(50, 50, 105, 4%);

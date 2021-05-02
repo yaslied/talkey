@@ -86,3 +86,45 @@ $sides: (top, bottom, left, right); // Leave this variable alone
     background: radial-gradient(ellipse at center, $start-color, $end-color);
   }
 }
+
+
+@mixin text(
+  $size: null,
+  $weight: null,
+  $lineHeight: null,
+  $color: null,
+  $case: null
+) {
+  @if $size != null {
+    font-size: $size;
+  }
+
+  @if $lineHeight != null {
+    line-height: $lineHeight;
+  }
+
+  @if $weight != null {
+    font-weight: $weight;
+  }
+
+  @if $color != null {
+    color: $color;
+  } @else {
+    color: red;
+  }
+
+  @if $case != null {
+    text-transform: $case;
+  } @else {
+    text-transform: normal;
+  }
+}
+// example
+// *passing all values
+// &-title {
+//   @include text(16px, 19px, 600);
+// }
+// **passing some values
+// &-author {
+//   @include text($weight: 800, $size: 12px);
+// }

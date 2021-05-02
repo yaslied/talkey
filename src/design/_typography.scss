@@ -1,5 +1,6 @@
 
 // typograph styleguide
+@import '_fonts';
 
 $gray1: #efeef0;
 $gray2: #d1d5da;
@@ -9,45 +10,45 @@ $gray4: #464646;
 $gray-scale-2: #747789;
 
 .text-big-title {
-  font-family: 'Roboto Bold', 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto Bold', sans-serif;
   font-size: 2.5rem; // 40 px
   letter-spacing: -0.5px;
   line-height: 2rem;
 }
 
 .text-title-1 {
-  font-family: 'Roboto Bold', 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto Bold', sans-serif;
   font-size: 2.125rem; // 34 px
 }
 
 .text-title-2 {
-  font-family: 'Roboto Bold', 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto Bold', sans-serif;
   font-size: 1.75rem; // 28 px
 }
 
 .text-title-3 {
-  font-family: 'Roboto Bold', 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto Bold', sans-serif;
   font-size: 1.5rem; // 24px
 }
 
 .text-title-4 {
-  font-family: 'Roboto Regular', 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto Regular', sans-serif;
   font-size: 1.125rem; // 18 px
 }
 
 .text-headline {
-  font-family: 'Roboto Bold', 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto Bold', sans-serif;
   font-size: 1.375rem; // 22 px
   letter-spacing: 0.25px;
 }
 
 .text-headline-2 {
-  font-family: 'Roboto Bold', 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto Bold', sans-serif;
   font-size: 1.125rem; // 18 px
 }
 
 .text-headline-3 {
-  font-family: 'Roboto Regular', 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto Regular', sans-serif;
   font-size: 1rem; // 16 px
   letter-spacing: 0.15px;
 }
@@ -59,26 +60,26 @@ $gray-scale-2: #747789;
 }
 
 .text-body-2 {
-  font-family: 'Open Sans Regular', 'Source Sans Pro', sans-serif;
+  font-family: 'Open Sans Regular', sans-serif;
   font-size: 1rem; // 16 px
   letter-spacing: 0.15px;
 }
 
 .text-body-3 {
-  font-family: 'Open Sans Regular', 'Source Sans Pro', sans-serif;
+  font-family: 'Open Sans Regular', sans-serif;
   font-size: 0.875rem; // 14 px
   letter-spacing: 0.15px;
 }
 
 .text-body-large {
-  font-family: 'Open Sans Bold', 'Source Sans Pro', sans-serif;
+  font-family: 'Open Sans Bold', sans-serif;
   font-size: 1rem; // 16 px
   letter-spacing: 0.15px;
   font-weight: bold;
 }
 
 .text-body-large-2 {
-  font-family: 'Open Sans Bold', 'Source Sans Pro', sans-serif;
+  font-family: 'Open Sans Bold', sans-serif;
   font-size: 1.125rem; // 18 px
   letter-spacing: 0.15px;
   font-weight: bold;
@@ -151,45 +152,3 @@ p {
   @include font-size(14px)
 }
 */
-
-@mixin text(
-  $size: null,
-  $weight: null,
-  $lineHeight: null,
-  $color: null,
-  $case: null
-) {
-  @if $size != null {
-    font-size: $size;
-  }
-
-  @if $lineHeight != null {
-    line-height: $lineHeight;
-  }
-
-  @if $weight != null {
-    font-weight: $weight;
-  }
-
-  @if $color != null {
-    color: $color;
-  } @else {
-    color: red;
-  }
-
-  @if $case != null {
-    text-transform: $case;
-  } @else {
-    text-transform: normal;
-  }
-}
-// example
-// *passing all values
-// &-title {
-//   @include text(16px, 19px, 600);
-// }
-// **passing some values
-// &-author {
-//   @include text($weight: 800, $size: 12px);
-// }
-

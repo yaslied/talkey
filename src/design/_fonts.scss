@@ -1,10 +1,10 @@
 $primary-font: 'Roboto', sans-serif;
-$secondary-font: 'Montserrat', sans-serif;
+$secondary-font: 'Open Sans Regular', sans-serif;
 $input-font: 'Roboto', sans-serif;
 
-$font-path: '../assets/fonts/';
-$roboto-font-path: '../assets/fonts/Roboto/';
-$opensans-font-path: '../assets/fonts/Open_Sans/';
+$font-path: '../assets/fonts';
+$roboto-font-path: '../assets/fonts/Roboto';
+$opensans-font-path: '../assets/fonts/Open_Sans';
 
 // @font-face {
 //   font-family: 'fontname';
@@ -14,7 +14,7 @@ $opensans-font-path: '../assets/fonts/Open_Sans/';
 // }
 
 @font-face {
-  font-family: 'Roboto';
+  font-family: 'Roboto Regular';
   src: url('#{$roboto-font-path}/Roboto-Regular.ttf');
   font-weight: normal;
   font-style: normal;
@@ -43,8 +43,8 @@ $opensans-font-path: '../assets/fonts/Open_Sans/';
 
 // Open
 @font-face {
-  font-family: 'Open Sans';
-  src: url('#{$opensans-font-path}/OpenSans-Regular.ttf');
+  font-family: 'Open Sans Regular';
+  src: url('#{$opensans-font-path}/OpenSans-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
