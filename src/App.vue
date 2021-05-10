@@ -5,6 +5,8 @@
       <router-link class="links" to="/login">Login</router-link>
       <router-link class="links" to="/reset">Reset</router-link>
       <router-link class="links" to="/register">Register</router-link>
+
+      <span class="memo">this is a temporary navigation bar. only for the purpose of test navigation in this first delivery.</span>
     </div>
     <router-view />
   </div>
@@ -23,6 +25,40 @@ $background-color: #323739;
   background-color: $background-color;
   margin: 0;
   padding: 0;
+}
+
+#nav {
+  background-color: $background-color;
+  height: 35px;
+  width: 100%;
+  margin: 0;
+  padding: 4px 32px;
+
+  border: 1px solid white;
+
+  .links {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.1em;
+    color: #0a84ff;
+    text-transform: lowercase;
+    letter-spacing: 0.5px;
+    font-family: 'Courier New', Courier, monospace;
+    text-decoration: none;
+    margin: 0 8px;
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.01);
+    }
+  }
+
+  .memo {
+    font-size: 14px;
+    color: #fff;
+    margin-left: auto;
+    font-family: 'Courier New', Courier, monospace;
+  }
 }
 
 html {
