@@ -10,10 +10,6 @@ const url = require('url');
 const app = express();
 const port = process.env.PORT_SERVER || process.env.PORT || 8081;
 
-
-// const moment = require('moment');
-// app.locals.moment = require('moment');
-
 global.environment = process.env.NODE_ENV || 'development';
 
 const {Pool} = require('pg');
@@ -29,9 +25,6 @@ if(global.environment==='development') {
       rejectUnauthorized: false,
     },
   });
-//  global.apiUrl = 'http://localhost:8081';
-//  global.wsUrl = 'ws://localhost:8081';
-
 }
 else {
   global.pool = new Pool({
@@ -40,9 +33,6 @@ else {
       rejectUnauthorized: false,
     },
   });
-
-//  global.apiUrl = 'https://talkey-chat.herokuapp.com';
-//  global.wsUrl = 'ws://talkey-chat.herokuapp.com';
 }
 
 const userController = require('./controllers/users');
@@ -55,18 +45,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
-
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+//
+//
+// // view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'ejs');
 
 
 // app.get('/api/blog/:id?', adminController.blog);
 // app.get('/api/page/:id', adminController.page);
 
 app.get('/getMessages/:id', messagesController.getMessages);
-app.post('/signUp', userController.createUser);
+app.post('/api/signUp', userController.createUser);
 // app.get('/teste', (req, res, next)=> {
 //   // req.params
 //   // req.query
@@ -75,9 +65,6 @@ app.post('/signUp', userController.createUser);
 //   res.send('EAE tudo tranquilo');
 //  // next();
 // });
-app.get('/teste2', (req, res)=>{
-  res.json({asd: 'sdsd', pppp: 'wqeqwe'});
-});
 
 
 // Busca arquivos na pasta Dist
@@ -98,8 +85,6 @@ else {
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
 
-
-// const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",
