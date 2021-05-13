@@ -1,4 +1,29 @@
 
+
+$previewGenericW: 175;
+$previewGenericH: 125;
+$previewGenericScale: 2.4;
+
+$previewPromotionW: 175;
+$previewPromotionH: 125;
+$previewPromotionScale: 2.4;
+
+$previewProductW: 175;
+$previewProductH: 125;
+$previewProductScale: 2.4;
+
+
+$previewCategoryW: 180;
+$previewCategoryH: 180;
+$previewCategoryScale: 1;
+
+
+$previewProfileW: 100;
+$previewProfileH: 100;
+$previewProfileScale: 1;
+
+
+
 // screen old pattern
 @mixin for-phone-only {
     @media (max-width: 576px) {
