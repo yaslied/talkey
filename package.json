@@ -8,7 +8,7 @@
     "start": "node server/index.js",
     "lint": "vue-cli-service lint",
     "client": "vue-cli-service serve",
-    "server": "nodemon server/index.js --watch ./server",
+    "server": "nodemon --inspect server/index.js --watch ./server",
     "serverStaticForDev": "ws",
     "heroku-postbuild": "npm install pm2 -g && npm install && npm install --only=dev && npm run build"
   },
@@ -20,6 +20,7 @@
     "express-http-proxy": "^1.6.2",
     "express-oauth-server": "^2.0.0",
     "font-awesome": "^4.7.0",
+    "node-oauth2-server": "^2.4.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0",

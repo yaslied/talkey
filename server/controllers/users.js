@@ -25,3 +25,27 @@ exports.createUser = async (request, response) => {
     }
 
 };
+
+exports.loginUser = async (request, response) => {
+    console.log('body', request.body);
+    const {username, password} = request.body;
+    return pool.query('SELECT id, username, email, password, image_url FROM users WHERE username = $1',
+        [username], async (error, result) => {
+            if (error) {
+                throw error
+            }
+            const user = result.rows[0]
+            console.log(user)
+            try {
+                if (await bcrypt.compare(password, user.password)) {
+                    return response.status(200).send(user);
+                } else {
+                    return response.status(203).send('Incorrect password');
+                }
+            } catch (error) {
+                console.log(error)
+                return response.status(500).send('Server error');
+            }
+
+        });
+}
