@@ -54,11 +54,11 @@ export default {
             </div>
 
             <div class="form">
-              <BaseInput class="form-input" label="nome de usuário" type="1" v-model="username"></BaseInput>
-              <BaseInput class="form-input" label="email" type="1" v-model="email"></BaseInput>
+              <BaseInput class="form-input" label="nome de usuário" v-model="username"></BaseInput>
+              <BaseInput class="form-input" label="email" v-model="email"></BaseInput>
 
-              <BaseInput class="form-input m-t-32" type="1" label="senha antiga" v-model="oldPassword"></BaseInput>
-              <BaseInput class="form-input" type="1" label="nova senha" v-model="password"></BaseInput>
+              <BaseInput class="form-input m-t-32" label="senha antiga" v-model="oldPassword"></BaseInput>
+              <BaseInput class="form-input" type="password" label="nova senha" v-model="password"></BaseInput>
             </div>
 
             <div class="actions">
@@ -112,11 +112,12 @@ h3 {
 .profile-component {
   @include flexbox(column, nowrap, center, flex-start);
   height: 100%;
-  max-width: 350px;
+  max-width: 400px;
   overflow: hidden;
   border-radius: 6px;
   padding: 32px;
   margin: 32px auto;
+  // background: #fff;
 
   .uploader-container {
     @include flexbox(row, nowrap, flex-end, flex-start);
@@ -128,7 +129,7 @@ h3 {
       height: 120px;
       width: 120px;
       background-color: $bg-mono-2;
-      border: 1px solid $bg-mono-2;
+      border: 1px solid $yellow-mono-2;
       border-radius: 50%;
       margin: 0 auto;
 
@@ -136,8 +137,8 @@ h3 {
 
       &:hover {
         cursor: pointer;
-        border: 1px solid $primary-color;
-        box-shadow:  0 0 1px 3px rgba($primary-color, .5);
+        border: 1px solid $orage-mono-3;
+        box-shadow:  0 0 1px 3px rgba($yellow-mono-2, .3);
       }
 
       .image-placeholder {
@@ -192,7 +193,7 @@ h3 {
       min-height: 35px;
       width: 100%;
       max-width: 350px;
-      margin: 4px 0;
+      margin: 0 0 8px 0;
 
       font-family: 'Roboto Regular';
     }
