@@ -43,16 +43,16 @@ export default {
         
         <span class="text-title-3 push-auto m-b-8">Criar Conta</span>
         
-        <div class="uploader-container">
+        <div class="uploader-container m-b-24">
           <div class="placeholder-container">
             <img class="image-placeholder" :src="require('@assets/icons/camera-outline.png')">
           </div>
           <!-- <img src="" alt=""> -->
         </div>
 
-        <BaseInput class="form-input" label="nome de usuário" type="1" v-model="username"></BaseInput>
-        <BaseInput class="form-input" label="email" type="1" v-model="email"></BaseInput>
-        <BaseInput class="form-input last-input" type="1" label="senha" v-model="password"></BaseInput>
+        <BaseInput class="form-input" label="nome de usuário" v-model="username"></BaseInput>
+        <BaseInput class="form-input" label="email" v-model="email"></BaseInput>
+        <BaseInput class="form-input last-input" label="senha" v-model="password"></BaseInput>
 
       </div>
 
@@ -143,6 +143,7 @@ export default {
       margin: 16px 0 8px 0;
 
       .button--primary {
+        width: 100%;
         min-width: 350px;
         border: none !important;
         margin-left: auto;

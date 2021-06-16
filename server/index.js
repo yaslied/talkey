@@ -5,19 +5,19 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const proxy = require('express-http-proxy');
+var oauthServer = require('express-oauth-server');
+const oauthServer2 = require('node-oauth2-server');
 const url = require('url');
+const authModel = require('./models/auth');
 
 const app = express();
 const port = process.env.PORT_SERVER || process.env.PORT || 8081;
-
-
-// const moment = require('moment');
-// app.locals.moment = require('moment');
 
 global.environment = process.env.NODE_ENV || 'development';
 
 const {Pool} = require('pg');
 
+//Config BD
 if(global.environment==='development') {
   global.pool = new Pool({
     user: "eqbuarubtngscp",
@@ -29,9 +29,6 @@ if(global.environment==='development') {
       rejectUnauthorized: false,
     },
   });
-//  global.apiUrl = 'http://localhost:8081';
-//  global.wsUrl = 'ws://localhost:8081';
-
 }
 else {
   global.pool = new Pool({
@@ -40,16 +37,9 @@ else {
       rejectUnauthorized: false,
     },
   });
-
-//  global.apiUrl = 'https://talkey-chat.herokuapp.com';
-//  global.wsUrl = 'ws://talkey-chat.herokuapp.com';
 }
 
-const userController = require('./controllers/users');
-const messagesController = require('./controllers/messages');
-const queryModel = require('./models/query');
-
-
+//Config app
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -57,27 +47,57 @@ app.use(cookieParser());
 app.use(cors());
 
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-
-// app.get('/api/blog/:id?', adminController.blog);
-// app.get('/api/page/:id', adminController.page);
-
-app.get('/getMessages/:id', messagesController.getMessages);
-app.post('/signUp', userController.createUser);
-// app.get('/teste', (req, res, next)=> {
-//   // req.params
-//   // req.query
-//   // req.body
-//   console.log('EAE');
-//   res.send('EAE tudo tranquilo');
-//  // next();
-// });
-app.get('/teste2', (req, res)=>{
-  res.json({asd: 'sdsd', pppp: 'wqeqwe'});
+// Add OAuth server.
+app.oauth = new oauthServer2({
+  model: authModel,
+  grants: ['password'],
+  debug: true,
 });
+
+const authRouter = require('./router/authRouter');
+//
+// app.use((req,res, next)=>{
+//   console.log('Debug req1', req.body);
+//   console.log('Debug req2', req.url, req.method);
+//   next();
+// });
+
+app.use('/api', authRouter.authRouter(express.Router(), app));
+app.use(app.oauth.errorHandler())
+
+
+app.get('/enter', app.oauth.authorise(), (req, res)=>{
+
+  res.send('Parabéns, você está conectado');
+});
+
+
+// // Post token.
+// app.post('/oauth/token', app.oauth.token());
+//
+// // Get authorization.
+// app.get('/oauth/authorize', function(req, res) {
+//   // Redirect anonymous users to login page.
+//   if (!req.app.locals.user) {
+//     return res.redirect('/');
+//   }
+//
+//   return res.redirect('/');
+// });
+//
+// // Post authorization.
+// app.post('/oauth/authorize', function(req, res) {
+//   // Redirect anonymous users to login page.
+//   if (!req.app.locals.user) {
+//     return res.redirect(`/login?client_id=${req.query.client_id}&redirect_uri=${req.query.redirect_uri}`);
+//   }
+//
+//   return app.oauth.authorize();
+// });
+//
+// app.get('/getMessages/:id', messagesController.getMessages);
+// app.post('/api/signUp', userController.createUser);
+// app.post('/api/login', userController.loginUser);
 
 
 // Busca arquivos na pasta Dist
@@ -98,8 +118,6 @@ else {
 const server = app.listen(port, () => console.log(`Listening on port ${port}`));
 
 
-
-// const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",

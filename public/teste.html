@@ -1,24 +1,68 @@
 <html>
 <head>
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </head>
 <body>
     Talkey chat server
 
 
     <script>
+        axios.defaults.baseURL = '/';
+        const token = sessionStorage.getItem('tokenMyApplication');
+        axios.defaults.headers.common['Authorization'] = token?`Bearer ${token}`:'';
+        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
+     /*   axios({
+            method: 'post',
+            url: '/api/login',
+            data: {
+                username: 'bruno_mond3',
+                password: '123mudar',
+                grant_type: 'password',
+                client_id: "null",
+                client_secret: "null"
+            }
+        }).then((result)=>{
+            console.log('result', result);
+        }); */
+
+        const params = new URLSearchParams();
+        params.append('username', 'bruno_mond3');
+        params.append('password', '123mudar');
+        params.append('grant_type', 'password');
+        params.append('client_id', 'null');
+        params.append('client_secret', 'null');
+
+        axios.get('/enter').then((result)=>{
+            console.log('result enter', result);
+        });
+
+   /*     axios.post('/api/login', params).then((result)=>{
+            console.log('result', result);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${(result.data ||{}).access_token || null}`;
+            sessionStorage.setItem('tokenMyApplication', (result.data ||{}).access_token || null);
+            axios.get('/enter').then((result)=>{
+                console.log('result enter', result);
+            });
+        }); */
+
+/*
         const Http = new XMLHttpRequest();
-        const data = `{ "username" : "bruno_mond2", "email" : "bruno_mond2@hotmail.com", "password" : "123mudar" }`
-        Http.open("POST", "/signUp");
-        Http.setRequestHeader("Content-type", "application/json");
-        Http.send(data);
+        const data = `{ "username" : "bruno_mond3", "password" : "123mudar", "grant_type" : "password" }`
+        const params = 'username=bruno_mond3&password=123mudar&grant_type=password&client_id=null&client_secret=null'
+        Http.open("POST", "/api/login");
+        Http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        Http.send(params);
+
+
+
 
         Http.onreadystatechange = (e) => {
             if(Http.readyState===4) {
-                console.log("Resposta", Http.responseText);
+                console.log("Resposta", Http.response);
             }
-        }
+        } */
 
       const socket = io('/');
       window.bruno = socket;

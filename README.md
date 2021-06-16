@@ -1,13 +1,19 @@
 # talkey
 
+Acesse aqui <https://talkey-chat.herokuapp.com>
+
 ## Project setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles and hot-reloads for development - Client only
 ```
-npm run serve
+npm run client
+```
+### Compiles and hot-reloads for development - Client & Serve
+```
+npm run dev
 ```
 
 ### Compiles and minifies for production
