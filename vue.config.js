@@ -2,6 +2,8 @@ const path = require('path')
 const appConfig = require('./src/config').config
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VuetifyLoaderPlugin } = require('vuetify-loader')
+
 
 module.exports = {
   //configure webpack
@@ -14,6 +16,16 @@ module.exports = {
       // CKEditor needs its own plugin to be built using webpack.
       new webpack.DefinePlugin({
         'process.env.appConfig': JSON.stringify(appConfig),
+      }),
+      new VuetifyLoaderPlugin({
+        match (originalTag, { kebabTag, camelTag, path, component }) {
+          if (kebabTag.startsWith('core-')) {
+            return [
+              camelTag,
+              `import ${camelTag} from '@/components/core/${camelTag.substring(4)}.vue'`
+            ]
+          }
+        }
       }),
       new HtmlWebpackPlugin({
         filename: 'link.html',

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as firebase from 'firebase'
+// import * as firebase from 'firebase'
 
 import AuthModule from './AuthModule'
 import ChatModule from './ChatModule'
@@ -33,12 +33,12 @@ export const store = new Vuex.Store({
   },
   actions: {
     loadOnlineUsers ({commit}) {
-      firebase.database().ref('presence').on('value', function (snapshot) {
-        let result = []
-        result[0] = snapshot.numChildren()
-        result[1] = snapshot.val()
-        commit('setOnlineUsers', result)
-      })
+      // firebase.database().ref('presence').on('value', function (snapshot) {
+      //   let result = []
+      //   result[0] = snapshot.numChildren()
+      //   result[1] = snapshot.val()
+      //   commit('setOnlineUsers', result)
+      // })
     },
     clearError ({commit}) {
       commit('clearError')
@@ -55,4 +55,6 @@ export const store = new Vuex.Store({
       return state.onlineUsers
     }
   }
-})
+});
+
+export default store;

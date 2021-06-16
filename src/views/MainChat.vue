@@ -2,17 +2,20 @@
 // @ is an alias to /src
 import MainLayout from '@src/layouts/app-main-layout';
 import MainContainer from '@src/layouts/app-container-layout';
-import BaseInput from '@components/base-input';
+// import BaseInput from '@components/base-input';
 
-import Chats from '@components/Chat/parts/Chats.vue';
-import Template from './template.vue';
+import Talks from '@/src/components/ChatTalks.vue';
+import Chat from '@/src/components/Chat/Chat.vue';
+// import Template from './template.vue';
 
 export default {
   name: 'MainChat',
+
   components: {
     MainLayout,
     MainContainer,
-    BaseInput
+    Talks,
+    Chat,
   },
 
   data() {
@@ -38,19 +41,26 @@ export default {
   <div class="chat-view">
     <MainLayout>
 
-      <template v-slot:side></template>
+      <template v-slot:side>
+      </template>
 
       <template v-slot:container>
-        <MainContainer
-          :right-hidden="false"
-        >
+        <MainContainer>
+
+          <template v-slot:left-header>
+            <h1>Conversas</h1>
+          </template>
+
+          <template v-slot:left-body>
+            <Talks class="talks"></Talks>
+          </template>
           
           <template v-slot:middle-header>
             <h3>middle-header content here, <br> using vue slots</h3>
           </template>
 
           <template v-slot:middle-body>
-            <h3>middle-here</h3>
+            <Chat class="chat-messager"></Chat>
           </template>
 
           <template v-slot:right-header>
