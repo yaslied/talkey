@@ -4,8 +4,11 @@ import MainLayout from '@src/layouts/app-main-layout';
 import MainContainer from '@src/layouts/app-container-layout';
 import BaseInput from '@components/base-input';
 
+import Chats from '@components/Chat/parts/Chats.vue';
+import Template from './template.vue';
+
 export default {
-  name: 'Home',
+  name: 'MainChat',
   components: {
     MainLayout,
     MainContainer,
@@ -34,28 +37,34 @@ export default {
 <template>
   <div class="chat-view">
     <MainLayout>
-      <MainContainer
-        :right-hidden="false"
-      >
-        
-        <template v-slot:middle-header>
-          <h3>middle-header content here, <br> using vue slots</h3>
-        </template>
 
-        <template v-slot:middle-body>
-          <h3>middle-here</h3>
-        </template>
+      <template v-slot:side></template>
 
-        <template v-slot:right-header>
-          <h3>right-header content here,<br> using vue slots</h3>
-        </template>
+      <template v-slot:container>
+        <MainContainer
+          :right-hidden="false"
+        >
+          
+          <template v-slot:middle-header>
+            <h3>middle-header content here, <br> using vue slots</h3>
+          </template>
 
-        <template v-slot:right-body>
-          <h3>right-body content here,<br> using vue slots</h3>
-          <h3 class="m-t-64">don`t forget responsive mixins</h3>
-        </template>
+          <template v-slot:middle-body>
+            <h3>middle-here</h3>
+          </template>
 
-      </MainContainer>
+          <template v-slot:right-header>
+            <h3>right-header content here,<br> using vue slots</h3>
+          </template>
+
+          <template v-slot:right-body>
+            <h3>right-body content here,<br> using vue slots</h3>
+            <h3 class="m-t-64">don`t forget responsive mixins</h3>
+          </template>
+
+        </MainContainer>
+      </template>
+
     </MainLayout>
   </div>
 </template>

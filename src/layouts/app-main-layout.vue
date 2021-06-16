@@ -1,11 +1,11 @@
 <template>
   <div class="app-main-layout">
     <div class="layout-sidebar">
-      
+      <slot name="side"></slot>
     </div>
 
     <div class="layout-container">
-      <slot></slot>
+      <slot name="container"></slot>
     </div>
 
 </div>
