@@ -6,8 +6,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: () => lazyLoadView(import('@views/Home')),
+    name: 'Chat',
+    component: () => lazyLoadView(import('@views/Chat')),
   },
   {
     path: '/library',

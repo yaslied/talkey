@@ -42,4 +42,9 @@ body {
   color: white;
   margin: 0 8px;
 }
+
+.app-page {
+  background-color: $background-color;
+  min-height: 100vh;
+}
 </style>
