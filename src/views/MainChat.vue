@@ -5,7 +5,7 @@ import MainContainer from '@src/layouts/app-container-layout';
 // import BaseInput from '@components/base-input';
 
 import Talks from '@/src/components/ChatTalks.vue';
-import Chat from '@/src/components/Chat/Chat.vue';
+import ChatMessager from '@/src/components/Chat.vue';
 // import Template from './template.vue';
 
 export default {
@@ -15,7 +15,7 @@ export default {
     MainLayout,
     MainContainer,
     Talks,
-    Chat,
+    ChatMessager,
   },
 
   data() {
@@ -60,7 +60,7 @@ export default {
           </template>
 
           <template v-slot:middle-body>
-            <Chat class="chat-messager"></Chat>
+            <ChatMessager class="chat-messager"></ChatMessager>
           </template>
 
           <template v-slot:right-header>
