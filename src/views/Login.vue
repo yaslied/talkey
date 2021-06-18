@@ -24,6 +24,7 @@ export default {
   methods: {
     login() {
       console.log('logging', {e: this.email, p: this.password});
+      this.$store.dispatch('AuthModule');
     },
   },
 }

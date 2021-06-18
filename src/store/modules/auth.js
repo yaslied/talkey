@@ -1,0 +1,54 @@
+// import * as firebase from 'firebase'
+import { apiInstance } from '../../api/index';
+
+const auth = {
+  namespaced: true,
+  state: {
+    user: null
+  },
+
+  mutations: {
+    setUser (state, payload) {
+      state.user = payload
+    }
+  },
+
+  actions: {
+    async register ({dispatch}, payload) {
+      // dispatch('setLoading', true, { root: true });
+      dispatch('clearError', null, { root: true });
+      
+      const credentials = { 'username' : payload.username, 'email' : payload.email, 'password' : payload.password }
+      console.log('auth/register', credentials);
+      try {
+        let result = await apiInstance.register(credentials);
+        return result;
+      } catch (error) {
+        console.log('Register Error', error);
+        dispatch('setError', error, { root: true });
+      }
+    },
+
+    logIn ({dispatch}, payload) {
+      dispatch('setLoading', true, { root: true });
+      dispatch('clearError', null, { root: true });
+    },
+
+    logOut ({commit}, payload) {
+      commit('setLoading', true)
+      commit('clearError')
+    }
+  },
+
+  getters: {
+    user (state) {
+      return state.user
+    },
+
+    loggedId(state) {
+      return !!state.user;
+    }
+  }
+}
+
+export default auth

@@ -1,0 +1,193 @@
+<script>
+import { chatComputed } from '@state/helpers';
+
+import BaseAvatar from '@src/components/BaseAvatar.vue';
+
+export default {
+  name: 'ChatTalks',
+  components: {
+    BaseAvatar,
+  },
+
+  created () {
+  },
+
+  computed: {
+    ...chatComputed,
+
+    chats () {
+      return this.chatTalks || {"0": {name: "default"}};
+    },
+
+    chatsLength () {
+      return this.chatTalks.length || 0;
+    }
+  },
+  methods: {
+    resolveLast(text) {
+      return text.length < 20 ? text : `${text.substring(0, 18)}...`;
+    },
+  }
+}
+</script>
+
+<template>
+  <v-list class="chatTalks">
+    <v-list-item class="talks-header">
+      <span class="text-body-2 text-gray text-bolder"> Todas as conversas </span>
+      <div class="talks-counter">
+        <span class="text-body-2">{{chatsLength}}</span>
+      </div>
+    </v-list-item>
+
+    <div class="talks-body">
+      <v-list-item class="talk-items" v-for="(chat, index) in chats" v-bind:key="chat.name" :to="/chat/ + index">
+        <div class="avatar-content">
+          <BaseAvatar
+          class="avatar"
+          :src="chat.src"
+          :name="chat.name"
+          ></BaseAvatar>
+        </div>
+        
+        <v-list-item-content class="item-content">
+          <span class="item-name">{{chat.name?chat.name:'indefinido'}}</span>
+          <span class="item-preview">
+            <strong>{{chat.last_message.sender? chat.last_message.sender : 'fulano'}}:</strong>
+            {{chat.last_message.text?resolveLast(chat.last_message.text):'indefinido'}}
+          </span>
+        </v-list-item-content>
+
+        <v-list-item-action class="item-info">
+          <span class="item-time text-overline">{{chat.last_message.time}}</span>
+          <span class="item-count">{{chat.unread_count}}</span>
+        </v-list-item-action>
+      </v-list-item>
+    </div>
+    
+  </v-list>
+</template>
+
+
+<style lang="scss" scoped>
+@import '@design';
+
+$sidebar-thin-width: 60px;
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background-color: $background-color;
+  color: #fff;
+}
+
+h3 {
+  @include text(12px, 600, 1.1em, #fff, lowercase);
+  letter-spacing: 0.5px;
+  font-family: 'Courier New', Courier, monospace;
+  color: white;
+  margin: 16px 24px;
+}
+
+.chatTalks {
+  width: 100%;
+  height: 100%;
+  background-color: $background-color;
+  padding: 0 0 10px 0;
+  // border: 1px solid red;
+
+  .talks-header {
+    @include flexbox(row, nowrap, center, space-between);
+    height: 50px;
+    width: 100%;
+    border-bottom: 2px solid $line-color;
+    padding: 4px 16px;
+
+    span {
+      width: 100%;
+    }
+
+    .talks-counter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      min-width: 32px;
+      height: 20px;
+      border-radius: 20px;
+      background-color: $blue-mono-4;
+      margin: 0 0 0 8px;
+      text-align: center;
+      // border: 1px solid red;
+
+      span {
+        @include text(14px, 600, 1.1em, $blue-mono-2, lowercase);
+      }
+    }
+  }
+
+  .talks-body {
+    width: 100%;
+    height: 100%;
+    max-height: 650px;
+    overflow-y: scroll;
+  }
+
+  .talk-items {
+    @include flexbox(row, nowrap, center, flex-start);
+    min-height: 60px;
+    max-height: 65px;
+    border-bottom: 1px solid $line-color;
+    // border: 1px solid red;
+    padding: 4px 8px;
+
+    .avatar-content {
+      margin: 0 8px 0 0;
+      // border: 1px solid red;
+    }
+
+    .item-content {
+      @include flexbox(column, nowrap, flex-start, center);
+      min-height: 60px;
+
+      .item-name, .item-preview {
+        @include text(14px, 600, 1.4em, #fff, normal);
+        font-family: 'Open Sans Regular', Courier, monospace;
+        color: $gray-shade-1;
+      }
+
+      .item-preview {
+        max-width: 80%;
+        @include text(10px, 500, 1.4em, $gray-shade-1, lowercase);
+        letter-spacing: 0.7px;
+        font-family: 'Open Sans Regular', Courier, monospace;
+        word-break: normal;
+      }
+    }
+
+    .item-info {
+      @include flexbox(column, nowrap, flex-start, space-between);
+      min-width: 40px;
+
+      .item-time, .item-count {
+        color: $gray-shade-1;
+      }
+
+      .item-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 16px;
+        border-radius: 20px;
+        background-color: $blue-mono-2;
+        margin: 0 0 0 8px;
+
+        @include text(12px, 600, 1.4em, #fff, lowercase);
+        font-family: 'Courier New', Courier, monospace;
+      }
+    }
+  }
+}
+
+</style>

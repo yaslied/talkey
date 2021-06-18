@@ -1,13 +1,20 @@
 <script>
+import { authMethods, authComputed } from '@state/helpers';
+
 import BaseInput from '@components/base-input';
+
 export default {
   name: 'Login',
+
   components: {
     BaseInput,
   },
 
   data(vm) {
     return {
+      tryingToRegister: false,
+      error: null,
+
       username: '',
       email: '',
       password: '',
@@ -15,6 +22,7 @@ export default {
   },
 
   computed: {
+    ...authComputed,
 
   },
 
@@ -23,8 +31,30 @@ export default {
   },
 
   methods: {
-    login() {
+    ...authMethods,
+
+    async signUp() {
       console.log('logging', {e: this.email, p: this.password});
+      this.tryingToRegister = true;
+      this.error = null;
+
+      const credentials = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      };
+
+      try {
+        const result = await this.register(credentials);
+        console.log('retorno', result);
+        this.$router.push({name: 'MainChat'});
+        this.error = null;
+      } catch (error) {
+        console.error('Error ao Registrar', error);
+        this.error = error.message;
+      }
+
+      this.tryingToRegister = false;
     },
   },
 }
@@ -57,7 +87,7 @@ export default {
       </div>
 
       <div class="login-container__actions">
-        <button class="app-button button--primary" @click="login">
+        <button class="app-button button--primary" @click="signUp">
           <span class="button-label text-body-2">Cadastrar</span>
         </button>
       </div>

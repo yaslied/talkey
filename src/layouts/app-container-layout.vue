@@ -1,5 +1,35 @@
+<script>
+// @ is an alias to /src
+
+export default {
+  name: 'MainContainerLayout',
+  components: {},
+
+  props: {
+    leftHidden: {
+      type: Boolean,
+      default: false,
+    },
+    rightHidden: {
+      type: Boolean,
+      default: false,
+    },
+  }
+}
+</script>
+
 <template>
   <div class="app-container-layout">
+
+    <div class="left-container" v-if="!leftHidden">
+      <div class="left-container__header">
+        <slot name="left-header"></slot>
+      </div>
+      <div class="left-container__body">
+        <slot name="left-body"></slot>
+      </div>
+    </div>
+
     <div class="middle-container">
       <div class="middle-container__header">
         <slot name="middle-header"></slot>
@@ -18,24 +48,8 @@
       </div>
     </div>
 
-</div>
+  </div>
 </template>
-
-<script>
-// @ is an alias to /src
-
-export default {
-  name: 'MainContainerLayout',
-  components: {},
-
-  props: {
-    rightHidden: {
-      type: Boolean,
-      default: false,
-    }
-  }
-}
-</script>
 
 <style lang="scss" scoped>
 @import '@design';
@@ -62,6 +76,28 @@ html, body {
   height: 100vh;
   overflow: hidden;
 
+  .left-container {
+    @include flexbox(column, nowrap, flex-start, flex-start);
+    width: 100%;
+    max-width: $right-max-width;
+    height: 100%;
+    border-right: 2px solid $line-color;
+
+    &__header {
+      height: $middle-header-max-height;
+      min-height: $middle-header-max-height;
+      width: 100%;
+      border-bottom: 2px solid $line-color;
+    }
+
+    &__body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
 
   .middle-container {
     @include flexbox(column, nowrap, flex-start, flex-start);
@@ -71,8 +107,9 @@ html, body {
 
     &__header {
       height: $middle-header-max-height;
+      min-height: $middle-header-max-height;
       width: 100%;
-      border-bottom: 2px solid rgba($gray-shade-1, 0.5);
+      border-bottom: 2px solid $line-color;
     }
 
     &__body {
@@ -88,12 +125,13 @@ html, body {
     width: 100%;
     max-width: $right-max-width;
     height: 100%;
-    border-left: 2px solid rgba($gray-shade-1, 0.5);
+    border-left: 2px solid $line-color;
 
     &__header {
       height: $middle-header-max-height;
+      min-height: $middle-header-max-height;
       width: 100%;
-      border-bottom: 2px solid rgba($gray-shade-1, 0.5);
+      border-bottom: 2px solid $line-color;
     }
 
     &__body {
