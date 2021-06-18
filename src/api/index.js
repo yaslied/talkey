@@ -25,10 +25,6 @@ export class ClientApi {
     this.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
   }
 
-  getAxios() {
-    return this.axios;
-  }
-
   startListeners() {
     this.socket.on("connect", () => {
         // this.socket.emit("chatJoin", 'ASDSDSFSDF');
