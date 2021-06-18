@@ -1,7 +1,10 @@
 // import * as firebase from 'firebase'
+import axios from 'axios';
 
-const ChatModule = {
+const chat = {
+  namespaced: true,
   state: {
+    onlineUsers: [],
     chats: [
       {
         name: "default",
@@ -32,13 +35,23 @@ const ChatModule = {
       },
     ]
   },
+
   mutations: {
     setChats (state, payload) {
       payload["0"] = {name: "Default"}
       state.chats = payload
-    }
+    },
+
+    setOnlineUsers (state, payload) {
+      state.onlineUsers = payload
+    },
   },
+
   actions: {
+    setCurrent(context, payload) {
+
+    },
+
     sendMessage (context, payload) {
       let chatID = payload.chatID
       const message = {
@@ -57,6 +70,16 @@ const ChatModule = {
       //     }
       //   )
     },
+
+    loadOnlineUsers ({commit}) {
+      // firebase.database().ref('presence').on('value', function (snapshot) {
+      //   let result = []
+      //   result[0] = snapshot.numChildren()
+      //   result[1] = snapshot.val()
+      //   commit('setOnlineUsers', result)
+      // })
+    },
+
     loadUserChats (context) {
       let user = context.getters.user
       // firebase.database().ref('users').child(user.id).child('chats').orderByChild("timestamp").once("value", function(snapshot) {
@@ -75,11 +98,16 @@ const ChatModule = {
       // })
     }
   },
+
   getters: {
-    chats (state) {
+    getChats (state) {
       return state.chats
-    }
+    },
+
+    onlineUsers (state) {
+      return state.onlineUsers
+    },
   }
 }
 
-export default ChatModule
+export default chat

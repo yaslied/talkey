@@ -1,29 +1,34 @@
 <script>
-  import BaseAvatar from '@src/components/BaseAvatar.vue';
+import { chatComputed } from '@state/helpers';
 
-  export default{
-    name: 'ChatTalks',
-    components: {
-      BaseAvatar,
-    },
-    created () {
-      // this.$store.dispatch('loadUserChats')//
-    },
-    computed: {
-      chats () {
-        return this.$store.getters.chats || {"0": {name: "default"}};
-      },
+import BaseAvatar from '@src/components/BaseAvatar.vue';
 
-      chatsLength () {
-        return this.$store.getters.chats.length || 0;
-      }
+export default {
+  name: 'ChatTalks',
+  components: {
+    BaseAvatar,
+  },
+
+  created () {
+  },
+
+  computed: {
+    ...chatComputed,
+
+    chats () {
+      return this.chatTalks || {"0": {name: "default"}};
     },
-    methods: {
-      resolveLast(text) {
-        return text.length < 20 ? text : `${text.substring(0, 18)}...`;
-      },
+
+    chatsLength () {
+      return this.chatTalks.length || 0;
     }
+  },
+  methods: {
+    resolveLast(text) {
+      return text.length < 20 ? text : `${text.substring(0, 18)}...`;
+    },
   }
+}
 </script>
 
 <template>

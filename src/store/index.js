@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 // import * as firebase from 'firebase'
 
-import AuthModule from './AuthModule'
-import ChatModule from './ChatModule'
+import AuthModule from './modules/auth'
+import ChatModule from './modules/chat'
+
 
 Vue.use(Vuex)
 
@@ -13,10 +14,11 @@ export const store = new Vuex.Store({
     chat: ChatModule
   },
   state: {
+    namespaced: true,
     loading: false,
     error: null,
-    onlineUsers: []
   },
+
   mutations: {
     setLoading (state, payload) {
       state.loading = payload
@@ -27,19 +29,8 @@ export const store = new Vuex.Store({
     clearError (state) {
       state.error = null
     },
-    setOnlineUsers (state, payload) {
-      state.onlineUsers = payload
-    }
   },
   actions: {
-    loadOnlineUsers ({commit}) {
-      // firebase.database().ref('presence').on('value', function (snapshot) {
-      //   let result = []
-      //   result[0] = snapshot.numChildren()
-      //   result[1] = snapshot.val()
-      //   commit('setOnlineUsers', result)
-      // })
-    },
     clearError ({commit}) {
       commit('clearError')
     }
@@ -51,9 +42,6 @@ export const store = new Vuex.Store({
     error (state) {
       return state.error
     },
-    onlineUsers (state) {
-      return state.onlineUsers
-    }
   }
 });
 
