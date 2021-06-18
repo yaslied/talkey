@@ -10,7 +10,8 @@
     "client": "vue-cli-service serve",
     "server": "nodemon --inspect server/index.js --watch ./server",
     "serverStaticForDev": "ws",
-    "heroku-postbuild": "npm install pm2 -g && npm install && npm install --only=dev && npm run build"
+    "heroku-postbuild": "npm install pm2 -g && npm install && npm install --only=dev && npm run build",
+    "cors": "gsutil cors set corsStorage.json gs://talkey-chat.appspot.com"
   },
   "dependencies": {
     "@mdi/js": "^5.9.55",

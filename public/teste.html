@@ -40,6 +40,10 @@
                     // this.socket.emit("chatJoin", 'ASDSDSFSDF');
                 });
 
+                this.socket.on("personSentMessage", data => {
+                    console.log('personSentMessage', data);
+                });
+
                 this.socket.on("newMessage", data => {
                     console.log('newMessage', data);
                 });
@@ -74,6 +78,10 @@
                 const body = { 'username' : username, 'email' : email, 'password' : password }
                 const result = await this.axios.post('/api/signUp', body)
                 console.log('result', result);
+            }
+
+            sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
+                this.socket.emit('personMessage', { msg, destId, talkId });
             }
         }
 
