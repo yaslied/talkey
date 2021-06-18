@@ -68,7 +68,8 @@ export class ClientApi {
     // this.axios.get('/enter').then((result)=>{
     //     console.log('result enter', result);
     // });
-    this.socket.emit('login', {bearerToken: this.token});
+    this.socket.emit('login', {bearerToken: this.token});  
+    //
   }
 }
 
