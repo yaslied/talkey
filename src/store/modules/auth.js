@@ -1,5 +1,5 @@
 // import * as firebase from 'firebase'
-import axios from 'axios';
+import { apiInstance } from '../../api/index';
 
 const auth = {
   namespaced: true,
@@ -14,30 +14,19 @@ const auth = {
   },
 
   actions: {
-    register ({dispatch}, payload) {
-      dispatch('setLoading', true, { root: true });
+    async register ({dispatch}, payload) {
+      // dispatch('setLoading', true, { root: true });
       dispatch('clearError', null, { root: true });
       
       const credentials = { 'username' : payload.username, 'email' : payload.email, 'password' : payload.password }
       console.log('auth/register', credentials);
-      Promise((resolve, reject) => {
-        api.post('/api/signUp', { credentials },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-          .then((response) => {
-            console.log('reponse', response.data);
-            const message = 'Ok';
-            resolve(response);
-            return message;
-          })
-          .catch((error) => {
-            console.log(error.message);
-            reject(error);
-          });
-      });
+      try {
+        let result = await apiInstance.register(credentials);
+        return result;
+      } catch (error) {
+        console.log('Register Error', error);
+        dispatch('setError', error, { root: true });
+      }
     },
 
     logIn ({dispatch}, payload) {

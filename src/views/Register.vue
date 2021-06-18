@@ -33,7 +33,7 @@ export default {
   methods: {
     ...authMethods,
 
-    async register() {
+    async signUp() {
       console.log('logging', {e: this.email, p: this.password});
       this.tryingToRegister = true;
       this.error = null;
@@ -45,12 +45,16 @@ export default {
       };
 
       try {
-        await this.register(credentials);
-        this.tryingToRegister = false;
+        const result = await this.register(credentials);
+        console.log('retorno', result);
+        this.$router.push({name: 'MainChat'});
         this.error = null;
       } catch (error) {
         console.error('Error ao Registrar', error);
+        this.error = error.message;
       }
+
+      this.tryingToRegister = false;
     },
   },
 }
@@ -83,7 +87,7 @@ export default {
       </div>
 
       <div class="login-container__actions">
-        <button class="app-button button--primary" @click="register">
+        <button class="app-button button--primary" @click="signUp">
           <span class="button-label text-body-2">Cadastrar</span>
         </button>
       </div>
