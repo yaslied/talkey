@@ -3,6 +3,8 @@ const Emitter = require('tiny-emitter');
 const emitterGroup = new Emitter();
 const emitterPerson = new Emitter();
 const authModel = require('../models/auth');
+const talksModel = require('../models/talks');
+const messagesController = require('./messages');
 
 exports.Connection = class Connection {
     userId = null;
@@ -44,12 +46,11 @@ exports.Connection = class Connection {
             return;
         }
 
-        this.socket.emit("successLogin", {userId: this.userId});
+        const talksResume = await talksModel.getTalksForUser(this.userId);
+        // const groups = await talksController.getAllUserGroups(this.userId);
+
+        this.socket.emit("successLogin", {userId: this.userId, talksResume: talksResume});
         emitterPerson.on(this.userId, this.onEmitterPersonBinded);
-
-        // pegar mensagens do banco e enviar para o cliente
-
-        const groups = await this.getAllUserGroups() || [];
 
         try {
             for(const group of groups) {
@@ -63,13 +64,13 @@ exports.Connection = class Connection {
     }
 
     onEmitterGroup(obj) {
-        this.socket.emit("group", obj);
+        this.socket.emit("groupSentMessage", obj);
     }
 
     onEmitterPerson(action, obj) {
         switch (action) {
             case 'personMessage':
-                this.socket.emit("personMessage", obj);
+                this.socket.emit("personSentMessage", obj);
                 break;
             case 'groupJoin':
                 this.socket.emit("groupJoinSelf", obj);
@@ -79,20 +80,33 @@ exports.Connection = class Connection {
         }
 
     }
+
     personMessage(obj) {
         console.log("user personMessage", obj);
         if(!this.userId) {
             return this.sendRequestLogin();
         }
-        if(!obj?.destId || !obj?.msg) {
+        if(!obj?.destId || !obj?.msg || !obj.talkId) {
             return this.sendError('Parâmetros inválidos');
         }
-        emitterPerson.emit(obj.destId, 'personMessage',{fromId: this.userId, msg: obj.msg});
+
+        let msg = {
+            talkId : obj.talkId,
+            senderId: this.userId,
+            type: obj.msg.type,
+            text: obj.msg.text
+        }
+
+        emitterPerson.emit(obj.destId, 'personMessage',{fromId: this.userId, msg: msg});
+
+
+        messagesController.createMessage(msg)
     }
 
     sendRequestLogin() {
         this.socket.emit("needLogin");
     }
+
     sendError(error) {
         this.socket.emit("error", error);
     }
@@ -102,6 +116,7 @@ exports.Connection = class Connection {
 
         emitterGroup.emit(obj.groupId, {userId: this.userId, msg: obj.msg});
     }
+
     disconnected() {
         console.log("user disconnected");
         emitterPerson.off(this.userId, this.onEmitterPersonBinded);
@@ -109,22 +124,12 @@ exports.Connection = class Connection {
             emitterGroup.off(o, this.onEmitterGroupBinded);
         }
     }
+
     async groupJoin(obj) {
         console.log('msg', obj); // {groupId:'sdfsdf', userId:'sdfsdf'}
 
         const group = obj; // TODO pegar do banco
         emitterGroup(obj.groupId, {action:'newUser', groupId: obj.groupId, user: {id:'sdfsdf', name: 'adsfsdf'}});
         emitterPerson.emit(obj.userId, 'groupJoin', group);
-    }
-
-    async getAllUserGroups() {
-        pool.query('SELECT t.* FROM USER_TALK ut JOIN TALKS t ON ut.talk_id = t.id WHERE ut.user_id = $1 AND t.type = \'GROUP\'', [this.userId], (error, result) => {
-            if (error) {
-                throw error
-            }
-
-            const lstGroups = (result.rowCount ? result.rows : {}) || [];
-            return lstGroups
-        })
     }
 }
