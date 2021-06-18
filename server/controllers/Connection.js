@@ -13,6 +13,7 @@ exports.Connection = class Connection {
     onEmitterPersonBinded = null;
     static connections = [];
     groupsIdsBinded = [];
+
     constructor(socket) {
         this.socket = socket;
         this.onEmitterPersonBinded = this.onEmitterPerson.bind(this);
@@ -47,20 +48,15 @@ exports.Connection = class Connection {
         }
 
         const talksResume = await talksModel.getTalksForUser(this.userId);
-        // const groups = await talksController.getAllUserGroups(this.userId);
-
+        const groups = talksResume.filter((value => value.type === 'GROUP'))
         this.socket.emit("successLogin", {userId: this.userId, talksResume: talksResume});
         emitterPerson.on(this.userId, this.onEmitterPersonBinded);
 
-        try {
-            for(const group of groups) {
-                emitterGroup.on(group.id, this.onEmitterGroupBinded);
-                this.groupsIdsBinded.push(group.id);
-            }
-        } catch (e) {
-            console.error(e)
-        }
 
+        for(const group of groups) {
+            emitterGroup.on(group.id, this.onEmitterGroupBinded);
+            this.groupsIdsBinded.push(group.id);
+        }
     }
 
     onEmitterGroup(obj) {
@@ -103,6 +99,29 @@ exports.Connection = class Connection {
         messagesController.createMessage(msg)
     }
 
+    startUserTalk(obj) {
+        console.log("user startUserTalk", obj);
+        if(!this.userId) {
+            return this.sendRequestLogin();
+        }
+
+        if(!obj?.destId || !obj?.msg) {
+            return this.sendError('Parâmetros inválidos');
+        }
+
+        let msg = {
+            talkId : obj.talkId,
+            senderId: this.userId,
+            type: obj.msg.type,
+            text: obj.msg.text
+        };
+
+        emitterPerson.emit(obj.destId, 'personMessage',{fromId: this.userId, msg: msg});
+
+        const talk = { name : null, type : 'P2P' };
+        talksModel.addUserToTalk([this.userId, obj.destId], talk);
+
+    }
     sendRequestLogin() {
         this.socket.emit("needLogin");
     }
@@ -114,7 +133,20 @@ exports.Connection = class Connection {
     groupMessage(obj) { // {groupId: 'asd', msg:'asfdfdf'}
         console.log("user groupMessage", obj);
 
-        emitterGroup.emit(obj.groupId, {userId: this.userId, msg: obj.msg});
+        if(!obj?.msg || !obj?.groupId) {
+            return this.sendError('Parâmetros inválidos');
+        }
+
+        let msg = {
+            talkId : obj.groupId,
+            senderId: this.userId,
+            type: obj.msg.type,
+            text: obj.msg.text
+        }
+
+        emitterGroup.emit(obj.groupId, {fromId: this.userId, msg: obj.msg});
+
+        messagesController.createMessage(msg)
     }
 
     disconnected() {
@@ -126,10 +158,21 @@ exports.Connection = class Connection {
     }
 
     async groupJoin(obj) {
-        console.log('msg', obj); // {groupId:'sdfsdf', userId:'sdfsdf'}
+        console.log('groupJoin', obj);
 
-        const group = obj; // TODO pegar do banco
-        emitterGroup(obj.groupId, {action:'newUser', groupId: obj.groupId, user: {id:'sdfsdf', name: 'adsfsdf'}});
-        emitterPerson.emit(obj.userId, 'groupJoin', group);
+        if(!obj?.users || !obj?.group) {
+            return this.sendError('Parâmetros inválidos');
+        }
+
+        obj.group.type = 'GROUP'
+        let result = await talksModel.addUserToTalk(obj.users?.map((value) => value?.id), obj.group)
+
+        emitterGroup.on(result, this.onEmitterGroupBinded);
+        this.groupsIdsBinded.push(result);
+
+        for (let user of obj.users) {
+            emitterPerson.emit(user.id, 'groupJoin', result);
+        }
+
     }
 }

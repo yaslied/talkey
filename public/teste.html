@@ -37,16 +37,20 @@
 
             startListeners() {
                 this.socket.on("connect", () => {
-                    // this.socket.emit("chatJoin", 'ASDSDSFSDF');
                 });
 
                 this.socket.on("personSentMessage", data => {
                     console.log('personSentMessage', data);
                 });
 
-                this.socket.on("newMessage", data => {
-                    console.log('newMessage', data);
+                this.socket.on("groupSentMessage", data => {
+                    console.log('groupSentMessage', data);
                 });
+
+                this.socket.on("groupJoinSelf", data => {
+                    console.log('groupJoinSelf', data);
+                });
+
                 this.socket.on("successLogin", data => {
                     console.log('successLogin', data);
                 });
@@ -80,8 +84,24 @@
                 console.log('result', result);
             }
 
+            async listUsers() {
+                if (this.token) {
+                    const result = await this.axios.get('/api/listUsers');
+                    console.log(result.data)
+                }
+            }
+
             sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
                 this.socket.emit('personMessage', { msg, destId, talkId });
+            }
+
+            sendGroupMessage(msg = { text: "mensagem", type: "TEXT" }, talkId) {
+                this.socket.emit('groupMessage', { msg, groupId : talkId });
+            }
+
+            addToGroup(users, talk) {
+                let data = {group : talk, users };
+                this.socket.emit("groupJoin", data);
             }
         }
 

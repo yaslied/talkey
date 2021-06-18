@@ -9,6 +9,7 @@ const proxy = require('express-http-proxy');
 const oauthServer2 = require('node-oauth2-server');
 const url = require('url');
 const authModel = require('./models/auth');
+const userController = require('./controllers/users');
 const Connection = require('./controllers/Connection');
 
 const app = express();
@@ -61,7 +62,7 @@ const authRouter = require('./router/authRouter');
 app.use('/api', authRouter.authRouter(express.Router(), app));
 app.use(app.oauth.errorHandler())
 
-
+app.get('/api/listUsers', app.oauth.authorise(), userController.listUsers);
 app.get('/enter', app.oauth.authorise(), (req, res)=>{
 
   res.send('Parabéns, você está conectado');

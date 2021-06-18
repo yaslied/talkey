@@ -49,3 +49,14 @@ exports.loginUser = async (request, response) => {
 
         });
 }
+
+exports.listUsers = async (request, response) => {
+
+    const result = await pool.query('SELECT * FROM users');
+    try {
+        return response.status(200).send(result.rows)
+    } catch (error) {
+        console.error(error)
+        return response.status(500).send('Server Error')
+    }
+};

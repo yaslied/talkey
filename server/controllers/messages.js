@@ -12,14 +12,14 @@ exports.createMessage = async(msg) => {
 
 };
 
-exports.getMessageById = async(msgId) => {
-    pool.query(`SELECT * FROM messages WHERE id = $1`,
-        [msgId],
+exports.getTalkMessages = async(talkId) => {
+    pool.query(`SELECT * FROM messages WHERE talk_id = $1`,
+        [talkId],
         (error, results) => {
             if (error) {
                 throw error;
             }
-            return results.rows[0];
+            return results.rows;
         }
     );
 

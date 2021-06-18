@@ -1,7 +1,7 @@
 
 exports.getTalksForUser = async (userId) => {
     try {
-        const results = await global.pool.query("SELECT t2.id as talk_id, t2.name as talk_name, t2.type as talk_type, m.sender_id as sender_id, m.type as message_type, m.text as message, m.send_timestamp as message_send_time FROM messages m JOIN talks t2 on m.talk_id = t2.id WHERE talk_id IN (SELECT t.id FROM user_talk ut JOIN talks t on ut.talk_id = t.id WHERE user_id = $1) AND m.send_timestamp = (SELECT Max(send_timestamp) FROM messages WHERE messages.talk_id = t2.id)", [userId]);
+        const results = await global.pool.query("SELECT * FROM (SELECT ut.talk_id, u.id as user_id, u.username as username, u.email as email, u.image_url as img_url FROM user_talk ut JOIN users u ON ut.user_id = u.id WHERE ut.talk_id IN (SELECT t.id FROM user_talk ut JOIN talks t on ut.talk_id = t.id WHERE user_id = $1) AND ut.user_id <> $1) q1 JOIN ( SELECT t2.id as talk_id, t2.name as talk_name, t2.type as talk_type, m.sender_id as sender_id, m.type as message_type, m.text as message, m.send_timestamp as message_send_time FROM messages m JOIN talks t2 on m.talk_id = t2.id WHERE talk_id IN (SELECT t.id FROM user_talk ut JOIN talks t on ut.talk_id = t.id WHERE user_id = $1) AND m.send_timestamp = (SELECT Max(send_timestamp) FROM messages WHERE messages.talk_id = t2.id)) q2 ON q1.talk_id = q2.talk_id", [userId]);
         let resumes = results.rows.map((value) => {
            let talkResume = {
                talkId : value.talk_id || '',
@@ -11,13 +11,39 @@ exports.getTalksForUser = async (userId) => {
                    senderId : value.sender_id || '',
                    messageType : value.message_type || '',
                    messageText : value.message || '',
-                   messageTimestamp : value.message_send_time
+                   creationTime : value.message_send_time
+               },
+               user : {
+                   userId : value.user_id,
+                   username : value.username,
+                   email : value.email,
+                   imgUrl : value.img_url
                }
-            }
-            return talkResume
+            };
+
+            return talkResume;
         });
 
-        return resumes;
+        let result = [];
+        for(resume of resumes) {
+            console.log('resume', resume)
+            let index = result.findIndex((value) => value.talkId === resume.talkId)
+            if (index === -1) {
+                result.push({
+                    talkId : resume.talkId,
+                    name : resume.name,
+                    talkType : resume.talkType,
+                    lastMessage : resume.lastMessage,
+                    users : []
+                });
+                result[result.length - 1].users.push(resume.user);
+            } else {
+                result[index].users.push(resume.user);
+            }
+
+        }
+
+        return result;
     } catch(err) {
         console.error(err);
         return [];
@@ -32,4 +58,18 @@ exports.getAllUserGroups = async (userId) => {
         console.error(err);
         return [];
     }
+}
+
+exports.addUserToTalk = async (usersIds, talk) => {
+    if (!talk.id) {
+        const talkResult = await global.pool.query('INSERT INTO talks (name, type) VALUES ($1, $2) RETURNING name, type', [talk.name, talk.type]);
+        talk.id = talkResult;
+    }
+    let promises = [];
+    for (const userId of usersIds) {
+        promises.push(global.pool.query('INSERT INTO user_talk (user_id, talk_id) VALUES ($1, $2)', [userId, talk.id]));
+    }
+    Promise.all(promises);
+
+    return talk.id
 }
