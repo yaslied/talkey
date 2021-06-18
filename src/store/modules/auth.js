@@ -37,6 +37,7 @@ const auth = {
       console.log('auth/logIn', credentials);
       try {
         let result = await apiInstance.makeLogin(credentials);
+        console.log('auth/logIn result --->', result);
         return result;
       } catch (error) {
         console.log('Login Error', error);

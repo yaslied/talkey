@@ -1,14 +1,37 @@
+<script>
+import MainLayout from '@src/layouts/app-main-layout';
+import Sidebar from '@src/components/Sidebar';
+
+export default {
+  name: 'App',
+
+  components: {
+    MainLayout,
+    Sidebar,
+  },
+
+  data() {
+    return {
+
+    }
+  },
+}
+</script>
+
+
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link class="links" to="/">Home</router-link>
-      <router-link class="links" to="/login">Login</router-link>
-      <router-link class="links" to="/reset">Reset</router-link>
-      <router-link class="links" to="/register">Register</router-link>
+     <MainLayout>
 
-      <span class="memo">this is a temporary navigation bar. only for the purpose of test navigation in this first delivery.</span>
-    </div>
-    <router-view />
+      <template v-slot:side>
+        <Sidebar class="side"></Sidebar>
+      </template>
+
+      <template v-slot:container>
+        <router-view />
+      </template>
+
+    </MainLayout>
   </div>
 </template>
 

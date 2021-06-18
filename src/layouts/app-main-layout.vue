@@ -8,7 +8,7 @@
       <slot name="container"></slot>
     </div>
 
-</div>
+  </div>
 </template>
 
 <script>
@@ -43,9 +43,11 @@ html, body {
   overflow: hidden;
 
   .layout-sidebar {
-    width: $sidebar-thin-width;
+    min-width: $sidebar-thin-width;
     height: 100%;
-    border-right: 2px solid rgba($gray-shade-1, 0.5);
+    padding: 0;
+    margin: 0;
+    background-color: $background-color;
   }
 
   .layout-container {

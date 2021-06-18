@@ -1,13 +1,11 @@
 <script>
 // @ is an alias to /src
-import MainLayout from '@src/layouts/app-main-layout';
 import MainContainer from '@src/layouts/app-container-layout';
 import BaseInput from '@components/base-input';
 
 export default {
   name: 'Home',
   components: {
-    MainLayout,
     MainContainer,
     BaseInput
   },
@@ -32,55 +30,53 @@ export default {
 
 
 <template>
-  <div class="home">
-    <MainLayout>
-      <MainContainer
-        :right-hidden="false"
-      >
-        
-        <template v-slot:middle-header>
-          <h3>middle-header content here, <br> using vue slots</h3>
-        </template>
+  <div class="profile-page">
+    <MainContainer
+      :left-hidden="true"
+    >
+      
+      <template v-slot:middle-header>
+        <h3>middle-header content here, <br> using vue slots</h3>
+      </template>
 
-        <template v-slot:middle-body>
-          <div class="profile-component">
+      <template v-slot:middle-body>
+        <div class="profile-component">
 
-            <div class="uploader-container m-b-32">
-              <div class="placeholder-container">
-                <img class="image-placeholder" :src="require('@assets/icons/camera-outline.png')">
-              </div>
-              <span class="text-title-3 push-auto m-b-8">{{username}}</span>
-              <!-- <img src="" alt=""> -->
+          <div class="uploader-container m-b-32">
+            <div class="placeholder-container">
+              <img class="image-placeholder" :src="require('@assets/icons/camera-outline.png')">
             </div>
-
-            <div class="form">
-              <BaseInput class="form-input" label="nome de usuário" v-model="username"></BaseInput>
-              <BaseInput class="form-input" label="email" v-model="email"></BaseInput>
-
-              <BaseInput class="form-input m-t-32" label="senha antiga" v-model="oldPassword"></BaseInput>
-              <BaseInput class="form-input" type="password" label="nova senha" v-model="password"></BaseInput>
-            </div>
-
-            <div class="actions">
-              <button class="app-button button--primary" @click="updateProfile">
-                <span class="button-label text-body-2">Salvar</span>
-              </button>
-            </div>
-
+            <span class="text-title-3 push-auto m-b-8">{{username}}</span>
+            <!-- <img src="" alt=""> -->
           </div>
-        </template>
 
-        <template v-slot:right-header>
-          <h3>right-header content here,<br> using vue slots</h3>
-        </template>
+          <div class="form">
+            <BaseInput class="form-input" label="nome de usuário" v-model="username"></BaseInput>
+            <BaseInput class="form-input" label="email" v-model="email"></BaseInput>
 
-        <template v-slot:right-body>
-          <h3>right-body content here,<br> using vue slots</h3>
-          <h3 class="m-t-64">don`t forget responsive mixins</h3>
-        </template>
+            <BaseInput class="form-input m-t-32" label="senha antiga" v-model="oldPassword"></BaseInput>
+            <BaseInput class="form-input" type="password" label="nova senha" v-model="password"></BaseInput>
+          </div>
 
-      </MainContainer>
-    </MainLayout>
+          <div class="actions">
+            <button class="app-button button--primary" @click="updateProfile">
+              <span class="button-label text-body-2">Salvar</span>
+            </button>
+          </div>
+
+        </div>
+      </template>
+
+      <template v-slot:right-header>
+        <h3>right-header content here,<br> using vue slots</h3>
+      </template>
+
+      <template v-slot:right-body>
+        <h3>right-body content here,<br> using vue slots</h3>
+        <h3 class="m-t-64">don`t forget responsive mixins</h3>
+      </template>
+
+    </MainContainer>
   </div>
 </template>
 
@@ -103,9 +99,9 @@ h3 {
   margin: 16px 24px;
 }
 
-.home-page {
+.profile-page {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: $background-color;
 }
 
