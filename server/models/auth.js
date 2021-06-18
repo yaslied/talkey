@@ -45,7 +45,7 @@ exports.getAccessToken = function(bearerToken, callback) {
                 expires: null
             };
             //set the error to true if userID is null, and pass in the token if there is a userID else pass null
-            callback(userID == null, userID == null ? null : accessToken);
+            callback(userID == null, userID == null ? null : accessToken, result.rows[0]);
         })
 };
 

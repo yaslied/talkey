@@ -2,88 +2,84 @@
 <head>
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <style>
+        body {
+            background-color: white;
+        }
+
+    </style>
 </head>
 <body>
     Talkey chat server
 
 
     <script>
-        axios.defaults.baseURL = '/';
-        const token = sessionStorage.getItem('tokenMyApplication');
-        axios.defaults.headers.common['Authorization'] = token?`Bearer ${token}`:'';
-        axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+        class Client {
+            token = null;
+            socket = null;
+            axios = null;
 
-     /*   axios({
-            method: 'post',
-            url: '/api/login',
-            data: {
-                username: 'bruno_mond3',
-                password: '123mudar',
-                grant_type: 'password',
-                client_id: "null",
-                client_secret: "null"
+            constructor() {
+                this.axios = axios;
+                this.token = sessionStorage.getItem('tokenMyApplication') || null;
+                this.setAxios();
+                this.socket = io('/');
+                this.startListeners();
+                if(this.token) {
+                    this.socket.emit('login', {bearerToken: this.token});
+                }
             }
-        }).then((result)=>{
-            console.log('result', result);
-        }); */
-
-        const params = new URLSearchParams();
-        params.append('username', 'bruno_mond3');
-        params.append('password', '123mudar');
-        params.append('grant_type', 'password');
-        params.append('client_id', 'null');
-        params.append('client_secret', 'null');
-
-        axios.get('/enter').then((result)=>{
-            console.log('result enter', result);
-        });
-
-   /*     axios.post('/api/login', params).then((result)=>{
-            console.log('result', result);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${(result.data ||{}).access_token || null}`;
-            sessionStorage.setItem('tokenMyApplication', (result.data ||{}).access_token || null);
-            axios.get('/enter').then((result)=>{
-                console.log('result enter', result);
-            });
-        }); */
-
-/*
-        const Http = new XMLHttpRequest();
-        const data = `{ "username" : "bruno_mond3", "password" : "123mudar", "grant_type" : "password" }`
-        const params = 'username=bruno_mond3&password=123mudar&grant_type=password&client_id=null&client_secret=null'
-        Http.open("POST", "/api/login");
-        Http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        Http.send(params);
-
-
-
-
-        Http.onreadystatechange = (e) => {
-            if(Http.readyState===4) {
-                console.log("Resposta", Http.response);
+            setAxios() {
+                this.axios.defaults.baseURL = '/';
+                this.axios.defaults.headers.common['Authorization'] = this.token?`Bearer ${this.token}`:'';
+                this.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
             }
-        } */
 
-      const socket = io('/');
-      window.bruno = socket;
-      console.log('Teste');
-      socket.on("connect", () => {
-        // either with send()
-       // socket.send("Hello!");
-        // or with emit() and custom event names
-        socket.emit("chatJoin", 'ASDSDSFSDF');
-      });
+            startListeners() {
+                this.socket.on("connect", () => {
+                    // this.socket.emit("chatJoin", 'ASDSDSFSDF');
+                });
 
-      // handle the event sent with socket.send()
-      socket.on("newMessage", data => {
-        console.log('newMessage', data);
-      });
+                this.socket.on("newMessage", data => {
+                    console.log('newMessage', data);
+                });
+                this.socket.on("successLogin", data => {
+                    console.log('successLogin', data);
+                });
+                this.socket.on("error", data => {
+                    console.log('error recebido', data);
+                });
+            }
 
-      //
-      // // handle the event sent with socket.emit()
-      // socket.on("greetings", (elem1, elem2, elem3) => {
-      //   console.log(elem1, elem2, elem3);
-      // });
+            async makeLogin(user='bruno_mond3', pass='123mudar') {
+                const params = new URLSearchParams();
+                params.append('username', user);
+                params.append('password', pass);
+                params.append('grant_type', 'password');
+                params.append('client_id', 'null');
+                params.append('client_secret', 'null');
+
+                const result = await this.axios.post('/api/login', params);
+                console.log('result', result);
+                this.token = (result.data ||{}).access_token || null;
+                this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+                sessionStorage.setItem('tokenMyApplication', this.token);
+                // this.axios.get('/enter').then((result)=>{
+                //     console.log('result enter', result);
+                // });
+                this.socket.emit('login', {bearerToken: this.token});
+            }
+
+            async register(username, email, password) {
+                const body = { 'username' : username, 'email' : email, 'password' : password }
+                const result = await this.axios.post('/api/signUp', body)
+                console.log('result', result);
+            }
+        }
+
+        window.client = new Client();
+
+
     </script>
 </body>
 </html>
