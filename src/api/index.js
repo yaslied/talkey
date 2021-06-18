@@ -60,12 +60,7 @@ export class ClientApi {
     params.append('client_id', 'null');
     params.append('client_secret', 'null');
 
-    const result = null;
-    try {
-      result = await this.axios.post('/api/login', params);
-    } catch (err) {
-      return err;
-    }
+    const result = await this.axios.post('/api/login', params);
 
     this.token = (result.data ||{}).access_token || null;
     this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
@@ -78,3 +73,4 @@ export class ClientApi {
 }
 
 export const apiInstance = new ClientApi();
+window.client = apiInstance;
