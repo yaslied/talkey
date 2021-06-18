@@ -1,5 +1,8 @@
 <script>
+import { authMethods, authComputed } from '@state/helpers';
+
 import BaseInput from '@components/base-input';
+
 export default {
   name: 'Login',
   components: {
@@ -8,13 +11,16 @@ export default {
 
   data(vm) {
     return {
-      email: '',
+      tryingToLogin: false,
+      error: null,
+
+      username: '',
       password: '',
     }
   },
 
   computed: {
-
+    ...authComputed,
   },
 
   watch: {
@@ -22,9 +28,29 @@ export default {
   },
 
   methods: {
-    login() {
-      console.log('logging', {e: this.email, p: this.password});
-      this.$store.dispatch('AuthModule');
+    ...authMethods,
+
+    async login() {
+      console.log('logging', {e: this.username, p: this.password});
+      this.tryingToLogin = true;
+      this.error = null;
+
+      const credentials = {
+        username: this.username,
+        password: this.password,
+      };
+
+      try {
+        const result = await this.logIn(credentials);
+        console.log('Login Retorno', result);
+        this.$router.push({name: 'MainChat'});
+        this.error = null;
+      } catch (error) {
+        console.error('Error ao Logar', error);
+        this.error = error.message;
+      }
+
+      this.tryingToLogin = false;
     },
   },
 }
@@ -46,7 +72,7 @@ export default {
           <span class="text-caption text-bolder">Não tem uma conta? Cadastre-se</span>
         </router-link>
 
-        <BaseInput class="form-input" label="email" v-model="email"></BaseInput>
+        <BaseInput class="form-input" label="nome de usuário" v-model="username"></BaseInput>
         <BaseInput class="form-input last-input" label="senha" v-model="password"></BaseInput>
 
         <router-link class="encapslued-link link-2" to="/reset">
