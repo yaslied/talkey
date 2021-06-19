@@ -34,13 +34,14 @@ export default {
 }
 </script>
 
-
 <template>
-  <div class="chat-view">
+  <div class="chat-page">
     <MainContainer>
 
       <template v-slot:left-header>
-        <h1>Conversas</h1>
+        <div class="chat-header--left">
+          <span class="text-big-title text-bolder text-gray">Conversas</span>
+        </div>
       </template>
 
       <template v-slot:left-body>
@@ -87,10 +88,21 @@ h3 {
   margin: 16px 24px;
 }
 
-.chat-view {
+.chat-page {
   width: 100%;
   height: 100vh;
   background-color: $background-color;
+
+  .chat-header--left {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100%;
+    padding: 8px 16px;
+
+    // border: 1px solid red;
+  }
 }
 
 </style>

@@ -41,7 +41,10 @@ export default {
     </v-list-item>
 
     <div class="talks-body">
-      <v-list-item class="talk-items" v-for="(chat, index) in chats" v-bind:key="chat.name" :to="/chat/ + index">
+      <v-list-item class="talk-items"
+        v-for="(chat, index) in chats" 
+        v-bind:key="`talk-item-${index}`"
+      >
         <div class="avatar-content">
           <BaseAvatar
           class="avatar"
@@ -141,6 +144,11 @@ h3 {
     // border: 1px solid red;
     padding: 4px 8px;
 
+    &:hover {
+      cursor: pointer;
+      background: rgba(black, .1);
+    }
+
     .avatar-content {
       margin: 0 8px 0 0;
       // border: 1px solid red;
@@ -174,7 +182,7 @@ h3 {
       }
 
       .item-count {
-        display: inline-flex;
+        display: none;
         align-items: center;
         justify-content: center;
         width: 24px;

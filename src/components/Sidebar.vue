@@ -209,7 +209,7 @@ export default {
         <v-list-item class="logout-container list-item" @click="logout()">
 
           <v-list-item-icon class="icon-container">
-            <v-icon class="item-icon" medium>fas fa-sign-out-alt</v-icon>
+            <v-icon class="item-icon" medium>mdi-logout</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content class="content-container">
@@ -297,8 +297,10 @@ $sidebar-thin-width: 70px;
 
     .navigation-routes {
       // height: 100%;
-      min-height: 350px;
+      margin: auto 0;
+      min-height: 180px;
       width: 100%;
+      // border: 1px solid red;
     }
 
     .list-item {
@@ -326,7 +328,7 @@ $sidebar-thin-width: 70px;
           width: 24px;
           height: 24px;
           margin-top: 0;
-          color: #fff;
+          color: $secondary-color;
         }
       }
 
@@ -337,7 +339,7 @@ $sidebar-thin-width: 70px;
         padding: 8px 16px;
 
         .item-label {
-          @include text(14px, 600, 1em, $secondary-color, normal);
+          @include text(14px, 600, 1em, #fff, normal);
           font-family: 'Opens Sans', 'Courier New', Courier, monospace;
           text-decoration: none;
           letter-spacing: 0.5px;

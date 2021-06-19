@@ -36,7 +36,9 @@ export default {
     >
       
       <template v-slot:middle-header>
-        <h3>middle-header content here, <br> using vue slots</h3>
+        <div class="profile-header">
+          <span class="text-big-title text-bolder text-gray">Perfil</span>
+        </div>
       </template>
 
       <template v-slot:middle-body>
@@ -103,6 +105,17 @@ h3 {
   width: 100%;
   height: 100%;
   background-color: $background-color;
+
+  .profile-header {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100%;
+    padding: 8px 16px;
+
+    // border: 1px solid red;
+  }
 }
 
 .profile-component {
