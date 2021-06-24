@@ -78,6 +78,7 @@ html, body {
 
   .left-container {
     @include flexbox(column, nowrap, flex-start, flex-start);
+    flex: 1;
     width: 100%;
     max-width: $right-max-width;
     height: 100%;
@@ -122,6 +123,7 @@ html, body {
 
   .right-container {
     @include flexbox(column, nowrap, flex-start, flex-start);
+    flex: 1 1 0;
     width: 100%;
     max-width: $right-max-width;
     height: 100%;

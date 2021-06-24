@@ -1,6 +1,5 @@
 <script>
 // @ is an alias to /src
-import MainLayout from '@src/layouts/app-main-layout';
 import MainContainer from '@src/layouts/app-container-layout';
 // import BaseInput from '@components/base-input';
 
@@ -12,7 +11,6 @@ export default {
   name: 'MainChat',
 
   components: {
-    MainLayout,
     MainContainer,
     Talks,
     ChatMessager,
@@ -36,46 +34,38 @@ export default {
 }
 </script>
 
-
 <template>
-  <div class="chat-view">
-    <MainLayout>
+  <div class="chat-page">
+    <MainContainer>
 
-      <template v-slot:side>
+      <template v-slot:left-header>
+        <div class="chat-header--left">
+          <span class="text-big-title text-bolder text-gray">Conversas</span>
+        </div>
       </template>
 
-      <template v-slot:container>
-        <MainContainer>
-
-          <template v-slot:left-header>
-            <h1>Conversas</h1>
-          </template>
-
-          <template v-slot:left-body>
-            <Talks class="talks"></Talks>
-          </template>
-          
-          <template v-slot:middle-header>
-            <h3>middle-header content here, <br> using vue slots</h3>
-          </template>
-
-          <template v-slot:middle-body>
-            <ChatMessager class="chat-messager"></ChatMessager>
-          </template>
-
-          <template v-slot:right-header>
-            <h3>right-header content here,<br> using vue slots</h3>
-          </template>
-
-          <template v-slot:right-body>
-            <h3>right-body content here,<br> using vue slots</h3>
-            <h3 class="m-t-64">don`t forget responsive mixins</h3>
-          </template>
-
-        </MainContainer>
+      <template v-slot:left-body>
+        <Talks class="talks"></Talks>
+      </template>
+      
+      <template v-slot:middle-header>
+        <h3>middle-header content here, <br> using vue slots</h3>
       </template>
 
-    </MainLayout>
+      <template v-slot:middle-body>
+        <ChatMessager class="chat-messager"></ChatMessager>
+      </template>
+
+      <template v-slot:right-header>
+        <h3>right-header content here,<br> using vue slots</h3>
+      </template>
+
+      <template v-slot:right-body>
+        <h3>right-body content here,<br> using vue slots</h3>
+        <h3 class="m-t-64">don`t forget responsive mixins</h3>
+      </template>
+
+    </MainContainer>
   </div>
 </template>
 
@@ -98,10 +88,21 @@ h3 {
   margin: 16px 24px;
 }
 
-.chat-view {
+.chat-page {
   width: 100%;
   height: 100vh;
   background-color: $background-color;
+
+  .chat-header--left {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    height: 100%;
+    padding: 8px 16px;
+
+    // border: 1px solid red;
+  }
 }
 
 </style>

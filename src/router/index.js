@@ -10,6 +10,21 @@ const routes = [
     component: () => lazyLoadView(import('@views/MainChat')),
   },
   {
+    path: '/profile',
+    name: 'profile',
+    component: () => lazyLoadView(import('@views/Profile')),
+  },
+  {
+    path: '/contacts',
+    name: 'contacts',
+    component: () => lazyLoadView(import('@views/Contacts')),
+  },
+  {
+    path: '/library',
+    name: 'library',
+    component: () => lazyLoadView(import('@views/Library')),
+  },
+  {
     path: '/library',
     name: 'library',
     component: () => lazyLoadView(import('@views/Library')),

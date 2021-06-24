@@ -1,10 +1,16 @@
 // import * as firebase from 'firebase'
-import axios from 'axios';
 
 const chat = {
   namespaced: true,
   state: {
     onlineUsers: [],
+    blockedContacts: [],
+    contacts: [
+      { id: 0, name: 'Mateus silva', img: null },
+      { id: 1, name: 'Ana da Mata', img: null },
+      { id: 2, name: 'Leorio Ferreira', img: null },
+      { id: 3, name: 'Marco (Uber)', img: null },
+    ],
     chats: [
       {
         name: "default",
@@ -33,7 +39,7 @@ const chat = {
         },
         unread_count: 1,
       },
-    ]
+    ],
   },
 
   mutations: {
@@ -45,11 +51,45 @@ const chat = {
     setOnlineUsers (state, payload) {
       state.onlineUsers = payload
     },
+
+    blockContact (state, payload) {
+      let index = state.contacts.map(function(e) { return e.id; }).indexOf(payload.id);
+      console.log('chat/block/id', index);
+      if (index != -1) {
+        state.contacts.splice(index, 1);
+        console.log('blocked', payload.id);
+        state.blockedContacts.push(payload);
+      } else {
+        console.error('chat/$m/block error:', payload.name);
+      }
+    },
+
+    unblockContact (state, payload) {
+      let index = state.blockedContacts.map(function(e) { return e.id; }).indexOf(payload.id);
+      console.log('chat/unblock/id', index);
+      if (index != -1) {
+        state.blockedContacts.splice(index, 1);
+        console.log('unblocked', payload.id);
+        state.contacts.push(payload);
+      } else {
+        console.error('chat/$m/block error:', payload.name);
+      }
+    },
   },
 
   actions: {
-    setCurrent(context, payload) {
+    setChatCurrent(context, payload) {
+      console.log('chat/setCurr', payload);
+    },
 
+    blockChatContact({commit}, payload) {
+      // console.log('chat/block', payload.id);
+      commit('blockContact', payload);
+    },
+
+    unblockChatContact({commit}, payload) {
+      // console.log('chat/block', payload.id);
+      commit('unblockContact', payload);
     },
 
     sendMessage (context, payload) {

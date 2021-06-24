@@ -18,6 +18,10 @@ export default {
       username: '',
       email: '',
       password: '',
+
+      files: [],
+      selectedFile: null,
+      isSelecting: false,
     }
   },
 
@@ -32,6 +36,21 @@ export default {
 
   methods: {
     ...authMethods,
+
+    onButtonClick() {
+      this.isSelecting = true;
+      window.addEventListener('focus', () => {
+        this.isSelecting = false
+      }, { once: true });
+      // console.log('clicked', this.$refs.uploader);
+
+      this.$refs['uploader'].click();
+    },
+
+    onFileChanged(e) {
+      this.selectedFile = e.target.files[0]
+      
+    },
 
     async signUp() {
       console.log('logging', {e: this.email, p: this.password});
@@ -74,9 +93,25 @@ export default {
         <span class="text-title-3 push-auto m-b-8">Criar Conta</span>
         
         <div class="uploader-container m-b-24">
-          <div class="placeholder-container">
+          <button class="placeholder-container" @click="onButtonClick">
             <img class="image-placeholder" :src="require('@assets/icons/camera-outline.png')">
-          </div>
+          </button>
+          <!-- <v-file-input
+            hide-input
+            ref="uploader"
+            class="file-input"
+            v-model="selectedFile"
+            accept="image/*"
+            prepend-icon="mdi-paperclip"
+            color="#fff"
+          ></v-file-input> -->
+          <input
+            ref="uploader"
+            class="file-input"
+            type="file"
+            accept="image/*"
+            @change="onFileChanged"
+          >
           <!-- <img src="" alt=""> -->
         </div>
 
@@ -143,11 +178,22 @@ export default {
           border-radius: 50%;
           margin: 0 auto;
 
+          &:hover {
+            cursor: pointer;
+            border: 1px solid $blue-mono-3;
+            box-shadow:  0 0 1px 3px rgba($blue-mono-2, .3);
+          }
+
           .image-placeholder {
             width: 24px;
             height: 24px;
             object-fit: contain;
           }
+        }
+
+        .file-input {
+          visibility: hidden;
+          height: 0;
         }
       }
 

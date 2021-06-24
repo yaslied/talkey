@@ -18,6 +18,8 @@ export const chatComputed = {
   ...mapState('chat', {
     // chatHighlighteds: (state) => state.highlighteds,
     chatTalks: (state) => state.chats,
+    chatContacts: (state) => state.contacts,
+    chatContactsBlocked: (state) => state.blockedContacts,
     // chatCurrent: (state) => state.current,
     // chatCurrentMessages: (state) => state.currentMessages,
     // chatCurrentId: (state) => state.currentId,
@@ -30,5 +32,7 @@ export const chatMethods = mapActions('chat', [
   'loadUserChats',
   'loadOnlineUsers',
   'sendMessage',
-  'setCurrent',
+  'setChatCurrent',
+  'blockChatContact',
+  'unblockChatContact',
 ])
