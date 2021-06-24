@@ -51,10 +51,23 @@ exports.loginUser = async (request, response) => {
 }
 
 exports.listUsers = async (request, response) => {
-
-    const result = await pool.query('SELECT * FROM users');
+    const { id } = request.query || request.user;
     try {
-        return response.status(200).send(result.rows)
+        const result = await pool.query('SELECT u.* FROM users u LEFT JOIN blocked_users bu ON (bu.blocker_id = u.id AND bu.blocked_id = $1) OR (bu.blocked_id = u.id AND bu.blocker_id = $1) WHERE bu.blocked_id IS NULL AND u.id <> $1', [id]);
+        const blocked = await pool.query('SELECT u.* FROM blocked_users bu JOIN users u ON bu.blocked_id = u.id WHERE blocker_id = $1', [id]);
+
+        return response.status(200).send({listUsers : result.rows, blockedUsers : blocked.rows})
+    } catch (error) {
+        console.error(error)
+        return response.status(500).send('Server Error')
+    }
+};
+
+exports.blockUser = async (request, response) => {
+    const { userId, blockId } = request.body;
+    const result = await pool.query('INSERT INTO blocked_users (blocker_id, blocked_id) VALUES ($1, $2)', [userId, blockId]);
+    try {
+        return response.status(200).send('Usuário bloqueado')
     } catch (error) {
         console.error(error)
         return response.status(500).send('Server Error')

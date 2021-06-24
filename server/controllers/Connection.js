@@ -24,6 +24,7 @@ exports.Connection = class Connection {
         socket.on("groupJoin", this.groupJoin.bind(this));
         socket.on("disconnect", this.disconnected.bind(this));
         socket.on("login", this.login.bind(this));
+        socket.on("startPersonTalk", this.startUserTalk.bind(this))
         Connection.connections.push(this);
     }
 
@@ -99,7 +100,7 @@ exports.Connection = class Connection {
         messagesController.createMessage(msg)
     }
 
-    startUserTalk(obj) {
+    async startUserTalk(obj) {
         console.log("user startUserTalk", obj);
         if(!this.userId) {
             return this.sendRequestLogin();
@@ -109,17 +110,18 @@ exports.Connection = class Connection {
             return this.sendError('Parâmetros inválidos');
         }
 
+        const talk = { name : null, type : 'P2P' };
+        talk.id = await talksModel.addUserToTalk([this.userId, obj.destId], talk);
+
+
         let msg = {
-            talkId : obj.talkId,
             senderId: this.userId,
             type: obj.msg.type,
-            text: obj.msg.text
+            text: obj.msg.text,
+            talkId : talk.id
         };
-
-        emitterPerson.emit(obj.destId, 'personMessage',{fromId: this.userId, msg: msg});
-
-        const talk = { name : null, type : 'P2P' };
-        talksModel.addUserToTalk([this.userId, obj.destId], talk);
+        this.personMessage({destId : obj.destId, talkId : talk.id, msg})
+        // emitterPerson.emit(obj.destId, 'personMessage',{fromId: this.userId, msg: msg});
 
     }
     sendRequestLogin() {
@@ -130,7 +132,7 @@ exports.Connection = class Connection {
         this.socket.emit("error", error);
     }
 
-    groupMessage(obj) { // {groupId: 'asd', msg:'asfdfdf'}
+    groupMessage(obj) {
         console.log("user groupMessage", obj);
 
         if(!obj?.msg || !obj?.groupId) {

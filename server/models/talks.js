@@ -1,3 +1,4 @@
+const messagesController = require('../controllers/messages');
 
 exports.getTalksForUser = async (userId) => {
     try {
@@ -26,7 +27,6 @@ exports.getTalksForUser = async (userId) => {
 
         let result = [];
         for(resume of resumes) {
-            console.log('resume', resume)
             let index = result.findIndex((value) => value.talkId === resume.talkId)
             if (index === -1) {
                 result.push({
@@ -61,15 +61,17 @@ exports.getAllUserGroups = async (userId) => {
 }
 
 exports.addUserToTalk = async (usersIds, talk) => {
+    let talkId = talk.id;
+
     if (!talk.id) {
-        const talkResult = await global.pool.query('INSERT INTO talks (name, type) VALUES ($1, $2) RETURNING name, type', [talk.name, talk.type]);
-        talk.id = talkResult;
+        const talkResult = await global.pool.query('INSERT INTO talks (name, type) VALUES ($1, $2) RETURNING id, name, type', [talk.name, talk.type]);
+        talkId = talkResult.rows[0].id;
     }
     let promises = [];
     for (const userId of usersIds) {
-        promises.push(global.pool.query('INSERT INTO user_talk (user_id, talk_id) VALUES ($1, $2)', [userId, talk.id]));
+        promises.push(global.pool.query('INSERT INTO user_talk (user_id, talk_id) VALUES ($1, $2)', [userId, talkId]));
     }
-    Promise.all(promises);
+    await Promise.all(promises);
 
-    return talk.id
+    return talkId;
 }

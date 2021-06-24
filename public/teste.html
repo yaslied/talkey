@@ -18,6 +18,7 @@
             token = null;
             socket = null;
             axios = null;
+            userId = null;
 
             constructor() {
                 this.axios = axios;
@@ -53,6 +54,7 @@
 
                 this.socket.on("successLogin", data => {
                     console.log('successLogin', data);
+                    this.userId = data.userId;
                 });
                 this.socket.on("error", data => {
                     console.log('error recebido', data);
@@ -85,14 +87,22 @@
             }
 
             async listUsers() {
-                if (this.token) {
-                    const result = await this.axios.get('/api/listUsers');
+                if (this.token && this.userId) {
+                    const result = await this.axios.get('/api/listUsers', {
+                        params: {
+                            id: this.userId
+                        }
+                    });
                     console.log(result.data)
                 }
             }
 
             sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
                 this.socket.emit('personMessage', { msg, destId, talkId });
+            }
+
+            startTalk(msg, destId) {
+                this.socket.emit('startPersonTalk', {msg, destId});
             }
 
             sendGroupMessage(msg = { text: "mensagem", type: "TEXT" }, talkId) {
