@@ -97,6 +97,24 @@
                 }
             }
 
+            async blockUser(userId, blockId) {
+              const body = { userId, blockId }
+              const  result = await this.axios.post('/api/blockUser', body);
+              console.log(result.data);
+            }
+
+          async blockUser(userId, unblockId) {
+            const body = { userId, unblockId }
+            const  result = await this.axios.post('/api/unblockUser', body);
+            console.log(result.data);
+          }
+
+          async getTalkMessages(talkId) {
+            const body = { talkId }
+            const  result = await this.axios.post('/api/getMessages', body);
+            console.log(result.data);
+          }
+
             sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
                 this.socket.emit('personMessage', { msg, destId, talkId });
             }
