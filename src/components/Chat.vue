@@ -19,9 +19,17 @@
         ref: null,
       }
     },
+
     props: [
       'id'
     ],
+
+    sockets: {
+      connect() {
+        console.log('$socket.connect');
+      }
+    },
+
     mounted () {
       this.loadChat();
       this.ref = this.$store.state["chat/chatInstance"];
@@ -35,16 +43,6 @@
 
     computed: {
       ...chatComputed,
-<<<<<<< HEAD
-
-      messages () {
-        return this.currentMessages;
-      },
-      username () {
-        return this.$store.getters?.user?.username
-      },
-
-=======
       // ...authComputed,
       messages () {
         const messages = (this.chatCurrentMessages || []).map(msg => {
@@ -56,7 +54,6 @@
       // username () {
       //   return this.$store.getters?.user?.username
       // },
->>>>>>> baa7c963b97a0b5043005fd497507917df0d08b9
       onNewMessageAdded () {
         const that = this
         let onNewMessageAdded = function (snapshot, newMessage = true) {

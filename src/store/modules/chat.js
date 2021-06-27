@@ -118,7 +118,6 @@ const chat = {
   },
 
   actions: {
-<<<<<<< HEAD
     async initChat({dispatch, commit, rootState}) {
       dispatch('setLoading', true, {root: true});
 
@@ -142,10 +141,7 @@ const chat = {
       dispatch('setLoading', false, {root: true});
     },
 
-    setChatCurrent({state, commit}, chatId) {
-=======
     async setChatCurrent({state, commit}, chatId) {
->>>>>>> baa7c963b97a0b5043005fd497507917df0d08b9
       let chat = state.chats.find((a)=>a.talkId===chatId);
       if(!chat) {
         console.error('chat não encontrado');
