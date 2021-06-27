@@ -7,6 +7,7 @@ export class ClientApi {
   token = null;
   socket = null;
   axios = null;
+  userId = null;
 
   constructor() {
     this.axios = axios;
@@ -34,6 +35,9 @@ export class ClientApi {
         console.log('newMessage', data);
     });
     this.socket.on("successLogin", data => {
+        this.userId = data.userId || null;
+      sessionStorage.setItem('userId', this.userId);
+      sessionStorage.setItem('chats', JSON.stringify(data.talksResume));
         console.log('successLogin', data);
     });
     this.socket.on("error", data => {
@@ -49,6 +53,7 @@ export class ClientApi {
   }
 
   async makeLogin(credentials) {
+    // console.log('credentials', credentials)
     const params = new URLSearchParams();
     params.append('username', credentials.username);
     params.append('password', credentials.password);
@@ -57,6 +62,7 @@ export class ClientApi {
     params.append('client_secret', 'null');
 
     const result = await this.axios.post('/api/login', params);
+    // console.log('result makelogin', result)
 
     this.token = (result.data ||{}).access_token || null;
     this.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
@@ -66,6 +72,41 @@ export class ClientApi {
     // });
     this.socket.emit('login', {bearerToken: this.token});  
     //
+    const resultReturn = {
+      token: this.token,
+      name: credentials.username || null,
+    }
+    return resultReturn;
+  }
+  async listUsers() {
+    // console.log('this.token', this.token);
+    // console.log('this.userId', this.userId);
+    if (this.token && this.userId) {
+      const result = await this.axios.get('/api/listUsers', {
+        params: {
+          id: this.userId
+        }
+      });
+      // console.log(result.data)
+      return result.data;
+    }
+    return {};
+  }
+  sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
+    this.socket.emit('personMessage', { msg, destId, talkId });
+  }
+
+  startTalk(msg, destId) {
+    this.socket.emit('startPersonTalk', {msg, destId});
+  }
+
+  sendGroupMessage(msg = { text: "mensagem", type: "TEXT" }, talkId) {
+    this.socket.emit('groupMessage', { msg, groupId : talkId });
+  }
+
+  addToGroup(users, talk) {
+    let data = {group : talk, users };
+    this.socket.emit("groupJoin", data);
   }
 }
 

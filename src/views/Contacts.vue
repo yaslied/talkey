@@ -1,18 +1,19 @@
 <script>
 // @ is an alias to /src
-import { chatMethods, chatComputed } from '@state/helpers';
+import {chatMethods, chatComputed, authComputed} from '@state/helpers';
 
 import MainContainer from '@src/layouts/app-container-layout';
 
 import BaseAvatar from '@src/components/BaseAvatar.vue';
-import BaseInput from '@components/base-input';
+// import BaseInput from '@components/base-input';
+
 
 export default {
   name: 'Contacts',
   components: {
     MainContainer,
     BaseAvatar,
-    BaseInput,
+    // BaseInput,
   },
 
   data() {
@@ -30,46 +31,36 @@ export default {
     }
   },
 
-  mounted() {
-    this.contactsList = this.chatContacts;
-    this.blockedList = this.chatContactsBlocked;
+  async mounted() {
+    await this.loadUsers();
   },
 
   computed: {
     ...chatComputed,
+    ...authComputed,
 
     hasContacts() {
-      return this.contactsList.length > 0;
+      return this.chatContacts?.length > 0;
     },
 
-    contactsView: {
-      get() {
-        return this.contactsList;
-      },
-      set(value) {
-        this.contactsList = value;
-      }
+    contactsView() {
+      return this.chatContacts;
     },
 
     hasBlockeds() {
-      return this.blockedList.length > 0;
+      return this.chatContactsBlocked?.length > 0;
     },
 
-    blockedView: {
-      get() {
-        return this.blockedList;
-      },
-      set(value) {
-        this.blockedList = value;
-      }
+    blockedView(){
+      return this.chatContactsBlocked;
     },
   },
 
   watch: {
-    chatContacts(value) {
-      console.log('change chatContacts', value);
-      this.contactsList = value;
-    },
+    // chatContacts(value) {
+    //   console.log('change chatContacts', value);
+    //   this.contactsList = value;
+    // },
 
     chatContactsBlocked(value) {
       console.log('change chatContactsBlocked', value);
@@ -79,10 +70,6 @@ export default {
 
   methods: {
     ...chatMethods,
-
-    reloadList() {
-      this.contactsList = this.chatContacts;
-    },
 
     updateProfile() {
       console.log('updating');
@@ -101,7 +88,7 @@ export default {
       }
 
       var self = this;
-      let find = Array.from(this.contactsView.filter(function(el){return el.name.toLowerCase().indexOf(self.currentSearch.toLowerCase())>=0;}));
+      let find = Array.from(this.contactsView.filter(function(el){return el.username.toLowerCase().indexOf(self.currentSearch.toLowerCase())>=0;}));
       // console.log('find', find);
       this.contactsView = find;
     },
@@ -109,12 +96,12 @@ export default {
     async setCurrent(el, user) {
       // TODO HERE
       console.log('set current:', {e: el, u: user});
-      try {
-        await this.setChatCurrent(user);
-      } catch (err) {
-        console.error('Error ao bloquear', err);
-        this.error = err;
-      }
+      // try {
+      //   await this.setChatCurrent(user);
+      // } catch (err) {
+      //   console.error('Error ao bloquear', err);
+      //   this.error = err;
+      // }
     },
 
     async blockContact(user) {
@@ -171,22 +158,21 @@ export default {
               <div class="list-header">
                 <span class="text-body-3 text-bolder text-gray">Contatos:</span>
               </div>
-              
+
               <div class="list-item"
                 v-for="(contact, index) in contactsView"
                 :key="`contact-item-${index}`"
               >
-
                 <div class="avatar-content">
                   <BaseAvatar
                   class="avatar"
-                  :src="contact.src"
-                  :name="contact.name"
+                  :src="contact.image_url"
+                  :name="contact.username"
                   ></BaseAvatar>
                 </div>
                 
                 <v-list-item-content class="item-content">
-                  <span class="item-name">{{contact.name?contact.name:'indefinido'}}</span>
+                  <span class="item-name">{{contact.username?contact.username:'indefinido'}}</span>
                 </v-list-item-content>
 
                 <div class="item-action">
@@ -231,12 +217,12 @@ export default {
                   <BaseAvatar
                   class="avatar"
                   :src="blocked.src"
-                  :name="blocked.name"
+                  :name="blocked.username"
                   ></BaseAvatar>
                 </div>
                 
                 <v-list-item-content class="item-content">
-                  <span class="item-name">{{blocked.name?blocked.name:'indefinido'}}</span>
+                  <span class="item-name">{{blocked.username?blocked.username:'indefinido'}}</span>
                 </v-list-item-content>
 
                 <div class="item-action">

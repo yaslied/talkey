@@ -14,8 +14,8 @@ export default {
       tryingToLogin: false,
       error: null,
 
-      username: '',
-      password: '',
+      username: 'bruno_mond3',
+      password: '123mudar',
     }
   },
 

@@ -74,7 +74,7 @@ export default {
 
   watch: {
     async currentUser() {
-      await this.filterItems();
+      // await this.filterItems();
     },
 
     miniVariant(value) {

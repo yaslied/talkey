@@ -1,6 +1,6 @@
 <script>
-import { chatComputed } from '@state/helpers';
-
+import {chatComputed, chatMethods} from '@state/helpers';
+import * as moment from "moment";
 import BaseAvatar from '@src/components/BaseAvatar.vue';
 
 export default {
@@ -9,24 +9,45 @@ export default {
     BaseAvatar,
   },
 
+  data() {
+    return {}
+  },
   created () {
+  },
+  async beforeMount() {
+    await this.loadUsers;
+    await this.loadChats;
   },
 
   computed: {
     ...chatComputed,
+    ...chatMethods,
 
     chats () {
-      return this.chatTalks || {"0": {name: "default"}};
+      return this.chatTalks || [];
     },
 
     chatsLength () {
-      return this.chatTalks.length || 0;
+      return this.chatTalks?.length || 0;
     }
   },
   methods: {
     resolveLast(text) {
       return text.length < 20 ? text : `${text.substring(0, 18)}...`;
     },
+    setTime(time){
+      return (moment(time)).format('DD/MM/YYYY HH:SS')
+    },
+    getLastSender(id){
+      return (this.allUsers || []).find(a => a.id === id) || {};
+    },
+    setCurrentChat(chat){
+      this.$store.dispatch('chat/setChatCurrent', chat.talkId);
+      // this.setChatCurrent(chat);
+      console.log('chatCurrent', this.chatCurrent);
+      console.log('chatCurrentId', this.chatCurrentId);
+      console.log('chatCurrentMessages', this.chatCurrentMessages);
+    }
   }
 }
 </script>
@@ -43,26 +64,27 @@ export default {
     <div class="talks-body">
       <v-list-item class="talk-items"
         v-for="(chat, index) in chats" 
-        v-bind:key="`talk-item-${index}`"
+        :key="`talk-item-${index}`"
+        @click="setCurrentChat(chat)"
       >
         <div class="avatar-content">
           <BaseAvatar
           class="avatar"
-          :src="chat.src"
-          :name="chat.name"
+          :name="(chat.talkType === 'P2P')?chat.users[0].username || '':chat.name || ''"
           ></BaseAvatar>
         </div>
-        
+
         <v-list-item-content class="item-content">
-          <span class="item-name">{{chat.name?chat.name:'indefinido'}}</span>
+          <span  v-if="chat.talkType === 'P2P'" class="item-name">{{chat.users[0].username?chat.users[0].username:'indefinido'}}</span>
+          <span v-else class="item-name">{{chat.name?chat.name:'indefinido'}}</span>
           <span class="item-preview">
-            <strong>{{chat.last_message.sender? chat.last_message.sender : 'fulano'}}:</strong>
-            {{chat.last_message.text?resolveLast(chat.last_message.text):'indefinido'}}
+            <strong>{{(chat.lastMessage || {}).senderId? getLastSender(chat.lastMessage.senderId).name : 'fulano'}}:</strong>
+            {{(chat.lastMessage || {}).messageText?resolveLast(chat.lastMessage.messageText):'indefinido'}}
           </span>
         </v-list-item-content>
 
         <v-list-item-action class="item-info">
-          <span class="item-time text-overline">{{chat.last_message.time}}</span>
+          <span class="item-time text-overline">{{setTime((chat.lastMessage || {}).creationTime || '')}}</span>
           <span class="item-count">{{chat.unread_count}}</span>
         </v-list-item-action>
       </v-list-item>

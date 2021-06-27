@@ -1,10 +1,12 @@
 // import * as firebase from 'firebase'
+import { apiInstance } from '../../api/index';
 
 const chat = {
   namespaced: true,
   state: {
     onlineUsers: [],
     blockedContacts: [],
+    allUsers: [],
     contacts: [
       { id: 0, name: 'Mateus silva', img: null },
       { id: 1, name: 'Ana da Mata', img: null },
@@ -40,12 +42,37 @@ const chat = {
         unread_count: 1,
       },
     ],
+    current: null,
+    currentId: null,
+    currentMessages: [],
   },
 
   mutations: {
     setChats (state, payload) {
-      payload["0"] = {name: "Default"}
+      // payload["0"] = {name: "Default"}
+      console.log('setchats', payload)
       state.chats = payload
+    },
+    setCurrent (state, chat) {
+      if(chat) {
+        state.current = chat;
+        state.currentId = chat.talkId;
+      }
+      else {
+        state.current = null;
+        state.currentId = null;
+        state.currentMessages = [];
+      }
+    },
+
+    loadUsers (state, payload) {
+      state.contacts = payload
+    },
+    loadBlockedUsers (state, payload) {
+      state.blockedContacts = payload
+    },
+    loadAllUsers (state, payload) {
+      state.allUsers = payload
     },
 
     setOnlineUsers (state, payload) {
@@ -78,8 +105,16 @@ const chat = {
   },
 
   actions: {
-    setChatCurrent(context, payload) {
-      console.log('chat/setCurr', payload);
+    setChatCurrent({state, commit}, chatId) {
+      let chat = state.chats.find((a)=>a.talkId===chatId);
+      if(!chat) {
+        console.error('chat não encontrado');
+        return false;
+      }
+      if(chatId!==state.currentId) {
+        //TODO LIGAR O OBSERVER PRA FICAR ESCUTANDO ESTE CHAT
+      }
+      commit('setCurrent', chat);
     },
 
     blockChatContact({commit}, payload) {
@@ -92,36 +127,32 @@ const chat = {
       commit('unblockContact', payload);
     },
 
-    sendMessage (context, payload) {
-      let chatID = payload.chatID
-      const message = {
-        user: payload.username,
-        content: payload.content,
-        date: payload.date
+    async sendMessage ({commit}, {msg, userId, chatId, toGroup}) {
+      if (toGroup){
+        await apiInstance.sendGroupMessage(msg, chatId)
+      } else {
+        await apiInstance.sendPersonMessage(msg, userId, chatId)
       }
-      // firebase.database().ref('messages').child(chatID).child('messages').push(message)
-      //   .then(
-      //     (data) => {
-      //     }
-      //   )
-      //   .catch(
-      //     (error) => {
-      //       console.log(error)
-      //     }
-      //   )
     },
 
     loadOnlineUsers ({commit}) {
-      // firebase.database().ref('presence').on('value', function (snapshot) {
-      //   let result = []
-      //   result[0] = snapshot.numChildren()
-      //   result[1] = snapshot.val()
-      //   commit('setOnlineUsers', result)
-      // })
-    },
 
-    loadUserChats (context) {
+    },
+    async loadChats ({commit}) {
+      console.log('to no load chats')
+      commit('setChats', JSON.parse(sessionStorage.getItem('chats')))
+    },
+    async loadUsers({commit}){
+      const result = await apiInstance.listUsers();
+      commit('loadUsers', result.listUsers);
+      commit('loadBlockedUsers', result.blockedUsers);
+      const all = (result.listUsers || []).concat(result.blockedUsers || []);
+      // console.log('all', all)
+      commit('loadAllUsers', all);
+    },
+    async loadUserChats (context) {
       let user = context.getters.user
+
       // firebase.database().ref('users').child(user.id).child('chats').orderByChild("timestamp").once("value", function(snapshot) {
       //   let chats = snapshot.val()
       //   if(chats == null) {

@@ -97,7 +97,7 @@
                 }
             }
 
-            sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
+            sendPersonMessage(msg, destId, talkId) {
                 this.socket.emit('personMessage', { msg, destId, talkId });
             }
 

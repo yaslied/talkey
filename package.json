@@ -22,6 +22,7 @@
     "express-http-proxy": "^1.6.2",
     "express-oauth-server": "^2.0.0",
     "font-awesome": "^4.7.0",
+    "moment": "^2.29.1",
     "node-oauth2-server": "^2.4.0",
     "tiny-emitter": "^2.1.0",
     "vue": "^2.6.11",

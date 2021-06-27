@@ -29,7 +29,7 @@ const auth = {
       }
     },
 
-    async logIn ({dispatch}, payload) {
+    async logIn ({dispatch, commit}, payload) {
       // dispatch('setLoading', true, { root: true });
       dispatch('clearError', null, { root: true });
       
@@ -38,6 +38,11 @@ const auth = {
       try {
         let result = await apiInstance.makeLogin(credentials);
         console.log('auth/logIn result --->', result);
+
+        commit('setUser', {
+          id: sessionStorage.getItem('userId') || null,
+          name: payload.username || null,
+        })
         return result;
       } catch (error) {
         console.log('Login Error', error);

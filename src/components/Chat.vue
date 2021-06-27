@@ -2,6 +2,7 @@
 <script>
   import Message from '@components/Chat/parts/Message.vue';
   import EmojiPicker from '@components/Chat/parts/EmojiPicker.vue';
+  import {chatComputed} from "@state/helpers";
   
   // import * as firebase from 'firebase'
   export default {
@@ -28,11 +29,12 @@
       'emoji-picker': EmojiPicker,
     },
     computed: {
+      ...chatComputed,
       messages () {
         return this.chatMessages
       },
       username () {
-        return this.$store.getters.user.username
+        return this.$store.getters?.user?.username
       },
       onNewMessageAdded () {
         const that = this
@@ -116,9 +118,14 @@
         }
         return message
       },
-      sendMessage () {
-        if (this.content !== '') {
-          this.$store.dispatch('sendMessage', { username: this.username, content: this.content, date: new Date().toString(), chatID: this.id })
+      async sendMessage () {
+        if (this.content !== '' && this.chatCurrentId) {
+          const msg = {text: this.content, type: 'TEXT'};
+          if (this.chatCurrent?.talkType === 'GROUP'){
+            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: null, chatId: this.chatCurrentId, toGroup: true});
+          } else {
+            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: this.chatCurrent?.users?.[0]?.userId, chatId: this.chatCurrentId, toGroup: false});
+          }
           this.content = ''
         }
       },

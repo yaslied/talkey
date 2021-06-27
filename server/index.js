@@ -24,7 +24,7 @@ if(global.environment==='development') {
   global.pool = new Pool({
     user: "eqbuarubtngscp",
     host: "ec2-3-233-7-12.compute-1.amazonaws.com",
-    database: "des3ueomk92hc2",
+      database: "des3ueomk92hc2",
     password: "9f05b5aaeb99b04334115b0a2be4bb79f8ae288060ac2e54ce9c1befc3e68dac",
     port: 5432,
     ssl: {

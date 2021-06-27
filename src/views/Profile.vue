@@ -2,6 +2,7 @@
 // @ is an alias to /src
 import MainContainer from '@src/layouts/app-container-layout';
 import BaseInput from '@components/base-input';
+import {authComputed, chatComputed} from "@state/helpers";
 
 export default {
   name: 'Home',
@@ -17,7 +18,21 @@ export default {
 
       oldPassword: '********',
       password: '#######',
+      user: {},
     }
+  },
+  computed: {
+    ...authComputed,
+    ...chatComputed,
+  },
+  watch: {
+  },
+  async mounted(){
+    // this.loadUsers;
+    // await this.$store.dispatch('chat/loadUsers');
+    // console.warn('this.allUsers', this.allUsers)
+    // const id = sessionStorage.getItem('userId');
+    // this.user = this.allUsers.find(a => a.id === id) || {};
   },
 
   methods: {
@@ -48,13 +63,13 @@ export default {
             <div class="placeholder-container">
               <img class="image-placeholder" :src="require('@assets/icons/camera-outline.png')">
             </div>
-            <span class="text-title-3 push-auto m-b-8">{{username}}</span>
+            <span class="text-title-3 push-auto m-b-8">{{user.username}}</span>
             <!-- <img src="" alt=""> -->
           </div>
 
           <div class="form">
-            <BaseInput class="form-input" label="nome de usuário" v-model="username"></BaseInput>
-            <BaseInput class="form-input" label="email" v-model="email"></BaseInput>
+            <BaseInput class="form-input" label="nome de usuário" v-model="user.username"></BaseInput>
+            <BaseInput class="form-input" label="email" v-model="user.email"></BaseInput>
 
             <BaseInput class="form-input m-t-32" label="senha antiga" v-model="oldPassword"></BaseInput>
             <BaseInput class="form-input" type="password" label="nova senha" v-model="password"></BaseInput>

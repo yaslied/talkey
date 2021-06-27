@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+// import VueMoment from 'vue-moment'
+import moment from 'moment'
 
 // import { config } from '@src/config';
 // import '@fortawesome/fontawesome-free/css/all.css';
@@ -17,3 +19,8 @@ new Vue({
   store,
   render: (h) => h(App),
 }).$mount('#app')
+
+// Vue.use(VueMoment, {
+//   moment
+// });
+window.moment = moment;
