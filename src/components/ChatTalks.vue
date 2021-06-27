@@ -21,7 +21,6 @@ export default {
 
   computed: {
     ...chatComputed,
-    ...chatMethods,
 
     chats () {
       return this.chatTalks || [];
@@ -32,6 +31,8 @@ export default {
     }
   },
   methods: {
+    ...chatMethods,
+
     resolveLast(text) {
       return text.length < 20 ? text : `${text.substring(0, 18)}...`;
     },

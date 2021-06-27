@@ -1,19 +1,28 @@
 // import * as firebase from 'firebase'
-import { apiInstance } from '../../api/index';
+// import { ClientApi } from '../../api/index';
 
 const auth = {
   namespaced: true,
   state: {
-    user: null
+    user: null,
+    instance: null,
   },
 
   mutations: {
+    init(state) {
+      // state.instance = new ClientApi();
+    },
+
     setUser (state, payload) {
       state.user = payload
-    }
+    },
   },
 
   actions: {
+    async initAuth({commit}) {
+      commit('init');
+    },
+
     async register ({dispatch}, payload) {
       // dispatch('setLoading', true, { root: true });
       dispatch('clearError', null, { root: true });
@@ -29,11 +38,23 @@ const auth = {
       }
     },
 
-    async logIn ({dispatch, commit}, payload) {
-      // dispatch('setLoading', true, { root: true });
-      dispatch('clearError', null, { root: true });
-      
-      const credentials = { 'username' : payload.username, 'password' : payload.password }
+    async logIn ({dispatch, commit, rootState}, payload) {
+      let apiInstance = null;
+      let initResponse = null;
+      try {
+        initResponse = await dispatch('initInstance', null, {root: true});
+        console.log('initResponse', initResponse);
+
+         apiInstance = rootState.apiInstance;
+
+      } catch (error) {
+        console.log('Instance Error', error);
+        dispatch('setError', error, {root: true});
+        await dispatch('finishInstance', null, {root: true});
+        throw error;
+      }
+
+      const credentials = {'username': payload.username, 'password': payload.password}
       console.log('auth/logIn', credentials);
       try {
         let result = await apiInstance.makeLogin(credentials);
@@ -42,17 +63,29 @@ const auth = {
         commit('setUser', {
           id: sessionStorage.getItem('userId') || null,
           name: payload.username || null,
-        })
+        });
+        dispatch('setLogged', true, {root: true});
+        dispatch('clearError', null, {root: true});
         return result;
-      } catch (error) {
-        console.log('Login Error', error);
-        dispatch('setError', error, { root: true });
+
+      } catch (err) {
+        console.log('Login Error', err);
+        dispatch('setError', err, {root: true});
+        dispatch('setLogged', false, {root: true});
       }
     },
 
-    logOut ({commit}, payload) {
-      commit('setLoading', true)
-      commit('clearError')
+    async logOut ({commit, dispatch, rootState}, payload) {
+      dispatch('setLoading', true, {root: true});
+
+      try {
+        await dispatch('finishInstance', null, { root: true });
+        dispatch('clearError',null, {root: true});
+        dispatch('setLogged', false, { root: true });
+      } catch (err) {
+        console.error('Error on Logout', err);
+      }
+      dispatch('setLoading', false, {root: true});
     }
   },
 
@@ -61,7 +94,7 @@ const auth = {
       return state.user
     },
 
-    loggedId(state) {
+    haveUser(state) {
       return !!state.user;
     }
   }

@@ -4,6 +4,7 @@ import { apiInstance } from '../../api/index';
 const chat = {
   namespaced: true,
   state: {
+    chatInstance: null,
     onlineUsers: [],
     blockedContacts: [],
     allUsers: [],
@@ -48,11 +49,16 @@ const chat = {
   },
 
   mutations: {
+    chatInstance(state, payload) {
+      state.chatInstance = payload;
+    },
+
     setChats (state, payload) {
       // payload["0"] = {name: "Default"}
       console.log('setchats', payload)
       state.chats = payload
     },
+
     setCurrent (state, chat) {
       if(chat) {
         state.current = chat;
@@ -63,6 +69,12 @@ const chat = {
         state.currentId = null;
         state.currentMessages = [];
       }
+    },
+
+    listenMessages(state) {
+      let event = null;
+      // event = state.chatInstance.socket.;
+      console.log('mu event', event);
     },
 
     loadUsers (state, payload) {
@@ -105,6 +117,29 @@ const chat = {
   },
 
   actions: {
+    async initChat({dispatch, commit, rootState}) {
+      dispatch('setLoading', true, {root: true});
+
+      let apiInstance = null;
+      if(rootState.isLoggedin && rootState.apiInstance !== null) {
+        try {
+          apiInstance = rootState.apiInstance;
+          commit('chatInstance', apiInstance);
+          // await dispatch('loadUsers');
+          // await dispatch('loadChats');
+          // await dispatch('loadOnlineUsers');
+
+        } catch (error) {
+          dispatch('setError', error, {root: true});
+          await dispatch('finishInstance', null, {root: true});
+        }
+      } else {
+       dispatch('auth/logOut', null, {root:true});
+      }
+
+      dispatch('setLoading', false, {root: true});
+    },
+
     setChatCurrent({state, commit}, chatId) {
       let chat = state.chats.find((a)=>a.talkId===chatId);
       if(!chat) {
@@ -127,29 +162,33 @@ const chat = {
       commit('unblockContact', payload);
     },
 
-    async sendMessage ({commit}, {msg, userId, chatId, toGroup}) {
+    async sendMessage ({commit, state}, {msg, userId, chatId, toGroup}) {
       if (toGroup){
-        await apiInstance.sendGroupMessage(msg, chatId)
+        await state.chatInstance.socket.sendGroupMessage(msg, chatId)
       } else {
-        await apiInstance.sendPersonMessage(msg, userId, chatId)
+        await state.chatInstance.socket.sendPersonMessage(msg, userId, chatId)
       }
     },
 
     loadOnlineUsers ({commit}) {
 
     },
+
     async loadChats ({commit}) {
       console.log('to no load chats')
       commit('setChats', JSON.parse(sessionStorage.getItem('chats')))
     },
-    async loadUsers({commit}){
-      const result = await apiInstance.listUsers();
+
+    async loadUsers({commit, state}){
+
+      const result = await state.chatInstance.socket.listUsers;
       commit('loadUsers', result.listUsers);
       commit('loadBlockedUsers', result.blockedUsers);
       const all = (result.listUsers || []).concat(result.blockedUsers || []);
       // console.log('all', all)
       commit('loadAllUsers', all);
     },
+
     async loadUserChats (context) {
       let user = context.getters.user
 

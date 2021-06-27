@@ -1,10 +1,17 @@
 import { mapState, mapGetters, mapActions } from 'vuex';
 
+export const rootComputed = {
+  ...mapState({
+    isLoggedin: (state) => state.isLoggedin,
+    isLoading: (state) => state.loading,
+  }),
+}
+
 export const authComputed = {
   ...mapState('auth', {
     currentUser: (state) => state.user,
   }),
-  ...mapGetters('auth', ['loggedIn']),
+  ...mapGetters('auth', ['haveUser']),
 }
 
 export const authMethods = mapActions('auth', [
@@ -29,6 +36,7 @@ export const chatComputed = {
 }
 
 export const chatMethods = mapActions('chat', [
+  'initChat',
   'loadUserChats',
   'loadOnlineUsers',
   'sendMessage',

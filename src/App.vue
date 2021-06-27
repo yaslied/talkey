@@ -39,6 +39,10 @@ export default {
 // @import '@design';
 $background-color: #323739;
 
+html, body {
+  background-color: $background-color;
+}
+
 #app {
   // font-family: 'Open Sans Regular';
   -webkit-font-smoothing: antialiased;

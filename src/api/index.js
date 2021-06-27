@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 const io = require("socket.io-client");
 
 
@@ -110,5 +109,5 @@ export class ClientApi {
   }
 }
 
-export const apiInstance = new ClientApi();
-window.client = apiInstance;
+// export const apiInstance = new ClientApi();
+// window.client = apiInstance;

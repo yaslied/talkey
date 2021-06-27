@@ -9,7 +9,7 @@ export default {
     BaseInput,
   },
 
-  data(vm) {
+  data() {
     return {
       tryingToLogin: false,
       error: null,

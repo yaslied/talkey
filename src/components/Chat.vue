@@ -14,28 +14,35 @@
         emojiPanel: false,
         currentRef: {},
         loading: false,
-        totalChatHeight: 0
+        totalChatHeight: 0,
+
+        ref: null,
       }
     },
     props: [
       'id'
     ],
     mounted () {
-      this.loadChat()
+      this.loadChat();
+      this.ref = this.$store.state["chat/chatInstance"];
       // this.$store.dispatch('loadOnlineUsers')
     },
+
     components: {
       'message': Message,
       'emoji-picker': EmojiPicker,
     },
+
     computed: {
       ...chatComputed,
+
       messages () {
-        return this.chatMessages
+        return this.currentMessages;
       },
       username () {
         return this.$store.getters?.user?.username
       },
+
       onNewMessageAdded () {
         const that = this
         let onNewMessageAdded = function (snapshot, newMessage = true) {
