@@ -12,15 +12,14 @@ exports.createMessage = async(msg) => {
 
 };
 
-exports.getTalkMessages = async(talkId) => {
-    pool.query(`SELECT * FROM messages WHERE talk_id = $1`,
-        [talkId],
-        (error, results) => {
-            if (error) {
-                throw error;
-            }
-            return results.rows;
-        }
-    );
+exports.getTalkMessages = async (request, response) => {
+  const { talkId } = request.body;
+    const result = await pool.query(`SELECT * FROM messages WHERE talk_id = $1`,[talkId]);
+  try {
+    return response.status(200).send(result.rows)
+  } catch (error) {
+    console.error(error)
+    return response.status(500).send('Server Error')
+  }
 
 };

@@ -10,6 +10,7 @@ const oauthServer2 = require('node-oauth2-server');
 const url = require('url');
 const authModel = require('./models/auth');
 const userController = require('./controllers/users');
+const messagesController = require('./controllers/messages');
 const Connection = require('./controllers/Connection');
 
 const app = express();
@@ -63,6 +64,9 @@ app.use('/api', authRouter.authRouter(express.Router(), app));
 app.use(app.oauth.errorHandler())
 
 app.get('/api/listUsers', app.oauth.authorise(), userController.listUsers);
+app.post('/api/blockUser', app.oauth.authorise(), userController.blockUser);
+app.post('/api/unblockUser', app.oauth.authorise(), userController.unblockUser);
+app.post('/api/getMessages', app.oauth.authorise(), messagesController.getTalkMessages);
 app.get('/enter', app.oauth.authorise(), (req, res)=>{
 
   res.send('Parabéns, você está conectado');

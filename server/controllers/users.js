@@ -65,9 +65,20 @@ exports.listUsers = async (request, response) => {
 
 exports.blockUser = async (request, response) => {
     const { userId, blockId } = request.body;
-    const result = await pool.query('INSERT INTO blocked_users (blocker_id, blocked_id) VALUES ($1, $2)', [userId, blockId]);
+    await pool.query('INSERT INTO blocked_users (blocker_id, blocked_id) VALUES ($1, $2)', [userId, blockId]);
     try {
         return response.status(200).send('Usuário bloqueado')
+    } catch (error) {
+        console.error(error)
+        return response.status(500).send('Server Error')
+    }
+};
+
+exports.unblockUser = async (request, response) => {
+    const { userId, unblockId } = request.body;
+    await pool.query('DELETE FROM blocked_users WHERE blocker_id = $1 AND blocked_id = $2)', [userId, unblockId]);
+    try {
+        return response.status(200).send('Usuário desbloqueado')
     } catch (error) {
         console.error(error)
         return response.status(500).send('Server Error')
