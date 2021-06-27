@@ -36,7 +36,6 @@ export class ClientApi {
     });
     this.socket.on("successLogin", data => {
         this.userId = data.userId || null;
-        // this.$store.state('chat/setUserId', this.userId);
       sessionStorage.setItem('userId', this.userId);
       sessionStorage.setItem('chats', JSON.stringify(data.talksResume));
         console.log('successLogin', data);

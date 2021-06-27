@@ -43,7 +43,6 @@ const auth = {
         let result = await apiInstance.makeLogin(credentials);
         console.log('auth/logIn result --->', result);
 
-        console.log('apiInstance.userId', apiInstance.userId)
         commit('setUser', {
           id: apiInstance.userId || null,
           name: payload.username || null,

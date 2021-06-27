@@ -57,7 +57,6 @@ export default {
           routeName: 'profile',
         },
       ],
-
     }
   },
 
@@ -69,14 +68,12 @@ export default {
       // window.teste = this.$router.currentRoute;
       return this.$router.currentRoute.name
     },
-
   },
 
   watch: {
     async currentUser() {
       // await this.filterItems();
     },
-
     miniVariant(value) {
       console.log('changing miniLocal to', value);
       miniVariantLocal = value;

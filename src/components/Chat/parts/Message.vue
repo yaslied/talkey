@@ -22,7 +22,7 @@
         return this.chatCurrent?.username || 'fulano';
       },
       own(){
-        return this.message?.sender_id == this.currentUser?.id;
+        return (this.message?.sender_id + '') === (this.currentUserId + '' );
       },
     },
     watch: {
