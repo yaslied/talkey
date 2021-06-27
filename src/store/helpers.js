@@ -3,6 +3,7 @@ import { mapState, mapGetters, mapActions } from 'vuex';
 export const authComputed = {
   ...mapState('auth', {
     currentUser: (state) => state.user,
+    currentUserId: (state) => state.userId,
   }),
   ...mapGetters('auth', ['loggedIn']),
 }

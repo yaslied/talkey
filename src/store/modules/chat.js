@@ -57,6 +57,7 @@ const chat = {
       if(chat) {
         state.current = chat;
         state.currentId = chat.talkId;
+        state.currentMessages = chat.messages || [];
       }
       else {
         state.current = null;
@@ -105,14 +106,14 @@ const chat = {
   },
 
   actions: {
-    setChatCurrent({state, commit}, chatId) {
+    async setChatCurrent({state, commit}, chatId) {
       let chat = state.chats.find((a)=>a.talkId===chatId);
       if(!chat) {
         console.error('chat não encontrado');
         return false;
       }
       if(chatId!==state.currentId) {
-        //TODO LIGAR O OBSERVER PRA FICAR ESCUTANDO ESTE CHAT
+        chat.messages = await apiInstance.getTalkMessages(chatId);
       }
       commit('setCurrent', chat);
     },
@@ -147,7 +148,7 @@ const chat = {
       commit('loadUsers', result.listUsers);
       commit('loadBlockedUsers', result.blockedUsers);
       const all = (result.listUsers || []).concat(result.blockedUsers || []);
-      // console.log('all', all)
+      console.log('all', all)
       commit('loadAllUsers', all);
     },
     async loadUserChats (context) {

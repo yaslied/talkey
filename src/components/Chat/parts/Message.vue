@@ -1,19 +1,34 @@
 <script>
-  // import Image from './Image.vue'
+  import Image from './Image.vue'
+  import {authComputed, chatComputed} from "@state/helpers";
+
   export default {
     data () {
       return {}
     },
-    props: [
-      'messages'
-    ],
+    props: {
+      message: {
+        type: Object,
+        default: () => {},
+      },
+    },
     components: {
       'chat-image': Image
     },
     computed: {
+      ...chatComputed,
+      ...authComputed,
       username () {
-        return this.$store.getters.user.username || 'fulano';
-      }
+        return this.chatCurrent?.username || 'fulano';
+      },
+      own(){
+        return this.message?.sender_id == this.currentUser?.id;
+      },
+    },
+    watch: {
+      message(value, oldValue){
+        console.log('this.usersLoadeds', this.allUsers);
+      },
     },
     methods: {
       imageLoad () {
@@ -25,22 +40,37 @@
 
 <template>
   <div>
-    <div class="message" v-for="(message,index) in messages" v-bind:key="index" :class="{own: message.user == username}">
-      <div class="username" v-if="index>0 && messages[index-1].user != message.user">{{message.user}}</div>
-      <div class="username" v-if="index == 0">{{message.user}}</div>
+    <div class="message"  :class="{own: own}">
+      {{'own: ' +own}}
+      <div class="username" v-if="!own">{{message.name}}</div>
+<!--      <div class="username" v-if="index == 0">{{message.user}}</div>-->
       <div style="margin-top: 5px"></div>
       <div class="content">
-        <div v-html="message.content"></div>
-        <chat-image v-if="message.image" :imgsrc="message.image" @imageLoad="imageLoad"></chat-image>
+        <div v-if="message.type === 'TEXT'" v-html="message.text"></div>
+        <chat-image v-if="message.type === 'IMAGE'" :imgsrc="message.image" @imageLoad="imageLoad"></chat-image>
       </div>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+//@import '@design';
   span.emoji {
     font-size: 20px;
     vertical-align: middle;
     line-height: 2;
   }
+
+  .message {
+    margin-bottom: 3px;
+    border: 2px solid rgba(#131C21, 0.5);
+    min-height: 40px;
+  }
+.own {
+  text-align: right;
+  border: 2px solid red;
+  .content {
+    //background-color: lightskyblue;
+  }
+}
 </style>

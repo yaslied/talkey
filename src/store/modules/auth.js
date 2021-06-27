@@ -4,13 +4,17 @@ import { apiInstance } from '../../api/index';
 const auth = {
   namespaced: true,
   state: {
-    user: null
+    user: null,
+    userId: null,
   },
 
   mutations: {
     setUser (state, payload) {
       state.user = payload
-    }
+    },
+    setUserId (state, id) {
+      state.userId = id
+    },
   },
 
   actions: {
@@ -39,8 +43,9 @@ const auth = {
         let result = await apiInstance.makeLogin(credentials);
         console.log('auth/logIn result --->', result);
 
+        console.log('apiInstance.userId', apiInstance.userId)
         commit('setUser', {
-          id: sessionStorage.getItem('userId') || null,
+          id: apiInstance.userId || null,
           name: payload.username || null,
         })
         return result;

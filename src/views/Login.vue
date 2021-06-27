@@ -9,7 +9,7 @@ export default {
     BaseInput,
   },
 
-  data(vm) {
+  data() {
     return {
       tryingToLogin: false,
       error: null,
@@ -17,6 +17,9 @@ export default {
       username: 'bruno_mond3',
       password: '123mudar',
     }
+  },
+  beforeMount() {
+    console.log('before mount FOUHASDOFLHAISDJFHLKASJDF')
   },
 
   computed: {

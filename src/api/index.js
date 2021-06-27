@@ -36,6 +36,7 @@ export class ClientApi {
     });
     this.socket.on("successLogin", data => {
         this.userId = data.userId || null;
+        // this.$store.state('chat/setUserId', this.userId);
       sessionStorage.setItem('userId', this.userId);
       sessionStorage.setItem('chats', JSON.stringify(data.talksResume));
         console.log('successLogin', data);
@@ -102,6 +103,13 @@ export class ClientApi {
 
   sendGroupMessage(msg = { text: "mensagem", type: "TEXT" }, talkId) {
     this.socket.emit('groupMessage', { msg, groupId : talkId });
+  }
+
+  async getTalkMessages(talkId) {
+    const body = { talkId }
+    const  result = await this.axios.post('/api/getMessages', body);
+    // console.log('getTalkMessages', result.data);
+    return result.data;
   }
 
   addToGroup(users, talk) {

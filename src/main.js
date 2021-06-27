@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-// import VueMoment from 'vue-moment'
 import moment from 'moment'
+import MySocket from './api/index';
 
 // import { config } from '@src/config';
 // import '@fortawesome/fontawesome-free/css/all.css';
@@ -12,7 +12,7 @@ import vuetify from '@src/plugins/vuetify';
 
 Vue.config.productionTip = false
 // Vue.config.productionTip = process.env.NODE_ENV === 'production'
-
+// const $socket = new MySocket(store);
 new Vue({
   vuetify,
   router,
@@ -20,7 +20,6 @@ new Vue({
   render: (h) => h(App),
 }).$mount('#app')
 
-// Vue.use(VueMoment, {
-//   moment
-// });
+// Vue.use($socket);
+
 window.moment = moment;
