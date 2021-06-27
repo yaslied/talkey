@@ -14,7 +14,7 @@ exports.createMessage = async(msg) => {
 
 exports.getTalkMessages = async (request, response) => {
   const { talkId } = request.body;
-    const result = await pool.query(`SELECT * FROM messages WHERE talk_id = $1`,[talkId]);
+    const result = await pool.query(`SELECT * FROM messages WHERE talk_id = $1 ORDER BY send_timestamp DESC`,[talkId]);
   try {
     return response.status(200).send(result.rows)
   } catch (error) {

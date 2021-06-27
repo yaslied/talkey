@@ -10,6 +10,7 @@ export const rootComputed = {
 export const authComputed = {
   ...mapState('auth', {
     currentUser: (state) => state.user,
+    currentUserId: (state) => state.userId,
   }),
   ...mapGetters('auth', ['haveUser']),
 }

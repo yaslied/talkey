@@ -2,7 +2,7 @@
 <script>
   import Message from '@components/Chat/parts/Message.vue';
   import EmojiPicker from '@components/Chat/parts/EmojiPicker.vue';
-  import {chatComputed} from "@state/helpers";
+  import {authComputed, chatComputed} from "@state/helpers";
   
   // import * as firebase from 'firebase'
   export default {
@@ -35,6 +35,7 @@
 
     computed: {
       ...chatComputed,
+<<<<<<< HEAD
 
       messages () {
         return this.currentMessages;
@@ -43,6 +44,19 @@
         return this.$store.getters?.user?.username
       },
 
+=======
+      // ...authComputed,
+      messages () {
+        const messages = (this.chatCurrentMessages || []).map(msg => {
+          msg.name = (this.allUsers.find(user => msg.sender_id === user.id) || {}).username || 'indefinido';
+          return msg;
+        })
+        return messages;
+      },
+      // username () {
+      //   return this.$store.getters?.user?.username
+      // },
+>>>>>>> baa7c963b97a0b5043005fd497507917df0d08b9
       onNewMessageAdded () {
         const that = this
         let onNewMessageAdded = function (snapshot, newMessage = true) {
@@ -163,7 +177,7 @@
 <template>
   <div class="chatMessager">
     <div class="messages-container" v-on:scroll="onScroll" ref="chatContainer" >
-      <message class="message" :messages="messages" @imageLoad="scrollToEnd"></message>
+      <message v-for="(message, index) in messages" :key="index" class="message" :message="message" @imageLoad="scrollToEnd"></message>
     </div>
     
     <emoji-picker :show="emojiPanel" @close="toggleEmojiPanel" @click="addEmojiToMessage"></emoji-picker>
@@ -199,17 +213,6 @@
   padding: 10px;
   background-color: transparent;
 
-  .message {
-    margin-bottom: 3px;
-
-    .own {
-      text-align: right;
-
-      .content {
-        background-color: lightskyblue;
-      }
-    }
-  }
 
   .username {
     font-size: 18px;

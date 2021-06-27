@@ -18,6 +18,9 @@ export default {
       password: '123mudar',
     }
   },
+  beforeMount() {
+    console.log('before mount FOUHASDOFLHAISDJFHLKASJDF')
+  },
 
   computed: {
     ...authComputed,

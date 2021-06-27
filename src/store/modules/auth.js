@@ -5,7 +5,11 @@ const auth = {
   namespaced: true,
   state: {
     user: null,
+<<<<<<< HEAD
     instance: null,
+=======
+    userId: null,
+>>>>>>> baa7c963b97a0b5043005fd497507917df0d08b9
   },
 
   mutations: {
@@ -16,6 +20,12 @@ const auth = {
     setUser (state, payload) {
       state.user = payload
     },
+<<<<<<< HEAD
+=======
+    setUserId (state, id) {
+      state.userId = id
+    },
+>>>>>>> baa7c963b97a0b5043005fd497507917df0d08b9
   },
 
   actions: {
@@ -60,8 +70,9 @@ const auth = {
         let result = await apiInstance.makeLogin(credentials);
         console.log('auth/logIn result --->', result);
 
+        console.log('apiInstance.userId', apiInstance.userId)
         commit('setUser', {
-          id: sessionStorage.getItem('userId') || null,
+          id: apiInstance.userId || null,
           name: payload.username || null,
         });
         dispatch('setLogged', true, {root: true});
