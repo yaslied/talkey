@@ -19,7 +19,6 @@ export default {
     }
   },
   beforeMount() {
-    console.log('before mount FOUHASDOFLHAISDJFHLKASJDF')
   },
 
   computed: {

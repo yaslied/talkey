@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 const io = require("socket.io-client");
 
 
@@ -38,11 +37,12 @@ export class ClientApi {
         this.userId = data.userId || null;
       sessionStorage.setItem('userId', this.userId);
       sessionStorage.setItem('chats', JSON.stringify(data.talksResume));
-        console.log('successLogin', data);
+        // console.log('successLogin', data);
     });
     this.socket.on("error", data => {
         console.log('error recebido', data);
     });
+
   }
 
   async register(credentials) {
@@ -79,8 +79,6 @@ export class ClientApi {
     return resultReturn;
   }
   async listUsers() {
-    // console.log('this.token', this.token);
-    // console.log('this.userId', this.userId);
     if (this.token && this.userId) {
       const result = await this.axios.get('/api/listUsers', {
         params: {
@@ -117,5 +115,5 @@ export class ClientApi {
   }
 }
 
-export const apiInstance = new ClientApi();
-window.client = apiInstance;
+// export const apiInstance = new ClientApi();
+// window.client = apiInstance;

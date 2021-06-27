@@ -2,10 +2,12 @@
 // @ is an alias to /src
 import MainContainer from '@src/layouts/app-container-layout';
 // import BaseInput from '@components/base-input';
-
 import Talks from '@/src/components/ChatTalks.vue';
 import ChatMessager from '@/src/components/Chat.vue';
 // import Template from './template.vue';
+
+import {chatMethods} from "@state/helpers";
+import chat from "@state/modules/chat";
 
 export default {
   name: 'MainChat',
@@ -23,13 +25,26 @@ export default {
 
       oldPassword: '********',
       password: '#######',
+
+      internListen: null,
     }
   },
 
+  async beforeMount() {
+    await this.initChat();
+    await this.loadUsers();
+  },
+
+  computed: {
+
+  },
+
   methods: {
+    ...chatMethods,
+
     updateProfile() {
       console.log('updating');
-    }
+    },
   }
 }
 </script>
@@ -40,7 +55,8 @@ export default {
 
       <template v-slot:left-header>
         <div class="chat-header--left">
-          <span class="text-big-title text-bolder text-gray">Conversas</span>
+<!--          <span class="text-big-title text-bolder text-gray">Conversas</span>-->
+          <span>{{internListen}}</span>
         </div>
       </template>
 

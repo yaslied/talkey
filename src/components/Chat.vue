@@ -14,23 +14,31 @@
         emojiPanel: false,
         currentRef: {},
         loading: false,
-        totalChatHeight: 0
+        totalChatHeight: 0,
+
+        ref: null,
       }
     },
     props: [
       'id'
     ],
-    mounted () {
-      this.loadChat()
+    async beforeMount () {
+      this.loadChat();
+      this.ref = this.$store.state["chat/chatInstance"];
       // this.$store.dispatch('loadOnlineUsers')
     },
+
     components: {
       'message': Message,
       'emoji-picker': EmojiPicker,
     },
+
     computed: {
       ...chatComputed,
-      // ...authComputed,
+      ...authComputed,
+      username () {
+        return this.$store.getters?.user?.username
+      },
       messages () {
         const messages = (this.chatCurrentMessages || []).map(msg => {
           msg.name = (this.allUsers.find(user => msg.sender_id === user.id) || {}).username || 'indefinido';
@@ -38,9 +46,6 @@
         })
         return messages;
       },
-      // username () {
-      //   return this.$store.getters?.user?.username
-      // },
       onNewMessageAdded () {
         const that = this
         let onNewMessageAdded = function (snapshot, newMessage = true) {
@@ -75,7 +80,7 @@
     },
     methods: {
       loadChat () {
-        this.totalChatHeight = this.$refs.chatContainer.scrollHeight
+        this.totalChatHeight = this.$refs.chatContainer?.scrollHeight
         this.loading = false
         if (this.id !== undefined) {
           this.chatMessages = []
@@ -125,11 +130,12 @@
       },
       async sendMessage () {
         if (this.content !== '' && this.chatCurrentId) {
+          const name = this.currentUser.name;
           const msg = {text: this.content, type: 'TEXT'};
           if (this.chatCurrent?.talkType === 'GROUP'){
-            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: null, chatId: this.chatCurrentId, toGroup: true});
+            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: this.chatCurrentId, toSendId: null, chatId: this.chatCurrentId, toGroup: true, name: name});
           } else {
-            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: this.chatCurrent?.users?.[0]?.userId, chatId: this.chatCurrentId, toGroup: false});
+            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: this.chatCurrentId, toSendId: this.chatCurrent?.users?.[0]?.userId, chatId: this.chatCurrentId, toGroup: false, name: name});
           }
           this.content = ''
         }

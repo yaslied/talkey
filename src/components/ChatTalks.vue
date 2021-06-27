@@ -1,5 +1,5 @@
 <script>
-import {chatComputed, chatMethods} from '@state/helpers';
+import {authComputed, chatComputed, chatMethods} from '@state/helpers';
 import * as moment from "moment";
 import BaseAvatar from '@src/components/BaseAvatar.vue';
 
@@ -15,16 +15,33 @@ export default {
   created () {
   },
   async beforeMount() {
-    await this.loadUsers;
-    await this.loadChats;
+    await this.loadUsers();
+    // await this.loadChats;
   },
 
   computed: {
     ...chatComputed,
-    ...chatMethods,
+    ...authComputed,
 
     chats () {
-      return this.chatTalks || [];
+      const chats = (this.chatTalks || []).map(chat => {
+        let auxName = '';
+        if(chat?.lastMessage?.senderId === this.currentUserId) {
+          auxName = this.currentUser.name || '';
+        } else {
+          ((this.allUsers || []).find(a => {
+            if(a.id === chat?.lastMessage?.senderId){
+              auxName = a.username || '';
+              return true;
+            }
+            return false
+          }) || {});
+        }
+        chat.lastSenderName = auxName;
+        return chat;
+      })
+
+      return chats || [];
     },
 
     chatsLength () {
@@ -32,6 +49,8 @@ export default {
     }
   },
   methods: {
+    ...chatMethods,
+
     resolveLast(text) {
       return text.length < 20 ? text : `${text.substring(0, 18)}...`;
     },
@@ -39,6 +58,7 @@ export default {
       return (moment(time)).format('DD/MM/YYYY HH:SS')
     },
     getLastSender(id){
+      console.log('allUsers', id, this.allUsers)
       return (this.allUsers || []).find(a => a.id === id) || {};
     },
     setCurrentChat(chat){
@@ -78,7 +98,7 @@ export default {
           <span  v-if="chat.talkType === 'P2P'" class="item-name">{{chat.users[0].username?chat.users[0].username:'indefinido'}}</span>
           <span v-else class="item-name">{{chat.name?chat.name:'indefinido'}}</span>
           <span class="item-preview">
-            <strong>{{(chat.lastMessage || {}).senderId? getLastSender(chat.lastMessage.senderId).name : 'fulano'}}:</strong>
+            <strong>{{chat.lastSenderName || 'fulano'}}:</strong>
             {{(chat.lastMessage || {}).messageText?resolveLast(chat.lastMessage.messageText):'indefinido'}}
           </span>
         </v-list-item-content>

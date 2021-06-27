@@ -103,7 +103,7 @@
               console.log(result.data);
             }
 
-          async blockUser(userId, unblockId) {
+          async unblockUser(userId, unblockId) {
             const body = { userId, unblockId }
             const  result = await this.axios.post('/api/unblockUser', body);
             console.log(result.data);

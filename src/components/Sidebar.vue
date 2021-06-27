@@ -1,8 +1,8 @@
 <script>
-import { authComputed, chatComputed } from '@state/helpers';
+import { authComputed, authMethods } from '@state/helpers';
 // import Locale from '@components/layout/locale';
 
-import BaseAvatar from '@components/BaseAvatar';
+// import BaseAvatar from '@components/BaseAvatar';
 
 let miniVariantLocal = true;
 let expandOnHoverLocal = true;
@@ -11,7 +11,7 @@ export default {
   name: 'Sidebar',
 
   components: {
-    BaseAvatar,
+    // BaseAvatar,
   },
 
   props: {},
@@ -62,15 +62,18 @@ export default {
 
   computed: {
     ...authComputed,
-    ...chatComputed,
 
-    routeName: function () {
+    routeName () {
       // window.teste = this.$router.currentRoute;
       return this.$router.currentRoute.name
+    },
+    routePath() {
+      return this.$router.currentRoute.fullPath;
     },
   },
 
   watch: {
+
     async currentUser() {
       // await this.filterItems();
     },
@@ -91,9 +94,7 @@ export default {
   },
 
   async mount() {
-    if(this.routeName === 'client/telemedicine') {
-      this.miniVariant = true;
-    }
+
   },
 
   mounted() {
@@ -107,9 +108,18 @@ export default {
 
 
   methods: {
+    ...authMethods,
 
-    logout: function (event) {
-      this.$router.push({ name: 'logout' });
+    async logout (event) {
+      console.log("current router", this.routePath);
+      if(this.routePath === "/login") {return}
+
+      try {
+        await this.logOut();
+      } catch(error) {
+        console.error('Logout Error', error);
+        this.$router.push({ path: '/login' });
+      }
     },
 
     toRouter(routeName, routePath) {
