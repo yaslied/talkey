@@ -11,6 +11,7 @@ export const authComputed = {
   ...mapState('auth', {
     currentUser: (state) => state.user,
     currentUserId: (state) => state.userId,
+    apiInstance: (state) => state.apiInstance,
   }),
   ...mapGetters('auth', ['haveUser']),
 }

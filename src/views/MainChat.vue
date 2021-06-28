@@ -32,7 +32,7 @@ export default {
 
   async beforeMount() {
     await this.initChat();
-
+    await this.loadUsers();
   },
 
   computed: {

@@ -2,7 +2,7 @@
 import { authComputed, authMethods } from '@state/helpers';
 // import Locale from '@components/layout/locale';
 
-import BaseAvatar from '@components/BaseAvatar';
+// import BaseAvatar from '@components/BaseAvatar';
 
 let miniVariantLocal = true;
 let expandOnHoverLocal = true;
@@ -11,7 +11,7 @@ export default {
   name: 'Sidebar',
 
   components: {
-    BaseAvatar,
+    // BaseAvatar,
   },
 
   props: {},
@@ -57,7 +57,6 @@ export default {
           routeName: 'profile',
         },
       ],
-
     }
   },
 
@@ -68,12 +67,9 @@ export default {
       // window.teste = this.$router.currentRoute;
       return this.$router.currentRoute.name
     },
-
     routePath() {
       return this.$router.currentRoute.fullPath;
     },
-
-
   },
 
   watch: {
@@ -81,7 +77,6 @@ export default {
     async currentUser() {
       // await this.filterItems();
     },
-
     miniVariant(value) {
       console.log('changing miniLocal to', value);
       miniVariantLocal = value;

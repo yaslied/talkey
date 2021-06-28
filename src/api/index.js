@@ -1,6 +1,7 @@
 import axios from 'axios';
 const io = require("socket.io-client");
 
+const emitter = require('tiny-emitter/instance');
 
 export class ClientApi {
   token = null;
@@ -30,19 +31,27 @@ export class ClientApi {
         // this.socket.emit("chatJoin", 'ASDSDSFSDF');
     });
 
-    this.socket.on("newMessage", data => {
-        console.log('newMessage', data);
+    this.socket.on("personSentMessage", data => {
+        // console.log('personSentMessage', data);
+        emitter.emit('personSentMessage', data);
     });
+
+    this.socket.on("groupSentMessage", data => {
+        // console.log('groupSentMessage', data);
+        emitter.emit('groupSentMessage', data);
+    });
+
     this.socket.on("successLogin", data => {
         this.userId = data.userId || null;
-        // this.$store.state('chat/setUserId', this.userId);
       sessionStorage.setItem('userId', this.userId);
       sessionStorage.setItem('chats', JSON.stringify(data.talksResume));
-        console.log('successLogin', data);
+        // console.log('successLogin', data);
+      emitter.emit('successLogin', data);
     });
     this.socket.on("error", data => {
         console.log('error recebido', data);
     });
+
   }
 
   async register(credentials) {
@@ -78,9 +87,8 @@ export class ClientApi {
     }
     return resultReturn;
   }
+
   async listUsers() {
-    // console.log('this.token', this.token);
-    // console.log('this.userId', this.userId);
     if (this.token && this.userId) {
       const result = await this.axios.get('/api/listUsers', {
         params: {
@@ -92,6 +100,7 @@ export class ClientApi {
     }
     return {};
   }
+
   sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
     this.socket.emit('personMessage', { msg, destId, talkId });
   }
@@ -117,5 +126,5 @@ export class ClientApi {
   }
 }
 
-// export const apiInstance = new ClientApi();
-// window.client = apiInstance;
+export const apiInstance = new ClientApi();
+window.client = apiInstance;

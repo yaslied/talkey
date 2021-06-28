@@ -3,6 +3,7 @@
   import Message from '@components/Chat/parts/Message.vue';
   import EmojiPicker from '@components/Chat/parts/EmojiPicker.vue';
   import {authComputed, chatComputed} from "@state/helpers";
+
   
   // import * as firebase from 'firebase'
   export default {
@@ -30,7 +31,7 @@
       }
     },
 
-    mounted () {
+    async beforeMount () {
       this.loadChat();
       this.ref = this.$store.state["chat/chatInstance"];
       // this.$store.dispatch('loadOnlineUsers')
@@ -43,7 +44,12 @@
 
     computed: {
       ...chatComputed,
-      // ...authComputed,
+      ...authComputed,
+
+      username () {
+        return this.curerntUser?.name || 'undefined';
+      },
+
       messages () {
         const messages = (this.chatCurrentMessages || []).map(msg => {
           msg.name = (this.allUsers.find(user => msg.sender_id === user.id) || {}).username || 'indefinido';
@@ -51,44 +57,49 @@
         })
         return messages;
       },
-      // username () {
-      //   return this.$store.getters?.user?.username
-      // },
+
       onNewMessageAdded () {
-        const that = this
-        let onNewMessageAdded = function (snapshot, newMessage = true) {
-          let message = snapshot.val()
-          message.key = snapshot.key
-          /*eslint-disable */
-          var urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
-          /*eslint-enable */
-          message.content = message.content
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;')
-          message.content = message.content.replace(urlPattern, "<a href='$1'>$1</a>")
-          if (!newMessage) {
-            that.chatMessages.unshift(that.processMessage(message))
-            that.scrollTo()
-          } else {
-            that.chatMessages.push(that.processMessage(message))
-            that.scrollToEnd()
-          }
-        }
-        return onNewMessageAdded
+        const that = this;
+
+        emitter.on('personSentMessage', function (arg) {
+          console.log('Recebi uma msg', arg);
+        });
+
+          // let message = snapshot.val()
+          // message.key = snapshot.key
+          // /*eslint-disable */
+          // var urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
+          // /*eslint-enable */
+          // message.content = message.content
+          //   .replace(/&/g, '&amp;')
+          //   .replace(/</g, '&lt;')
+          //   .replace(/>/g, '&gt;')
+          //   .replace(/"/g, '&quot;')
+          //   .replace(/'/g, '&#039;')
+          // message.content = message.content.replace(urlPattern, "<a href='$1'>$1</a>")
+          // if (!newMessage) {
+          //   that.chatMessages.unshift(that.processMessage(message))
+          //   that.scrollTo()
+          // } else {
+          //   that.chatMessages.push(that.processMessage(message))
+          //   that.scrollToEnd()
+          // }
+        
+        return 'onNewMessageAdded';
       }
     },
+
     watch: {
       '$route.params.id' (newId, oldId) {
         this.currentRef.off('child_added', this.onNewMessageAdded)
         this.loadChat()
-      }
+      },
+
     },
+
     methods: {
       loadChat () {
-        this.totalChatHeight = this.$refs.chatContainer.scrollHeight
+        this.totalChatHeight = this.$refs.chatContainer?.scrollHeight
         this.loading = false
         if (this.id !== undefined) {
           this.chatMessages = []
@@ -97,6 +108,7 @@
           this.currentRef.on('child_added', this.onNewMessageAdded)
         }
       },
+
       onScroll () {
         let scrollValue = this.$refs.chatContainer.scrollTop
         const that = this
@@ -123,6 +135,7 @@
           )
         }
       },
+
       processMessage (message) {
         /*eslint-disable */
         var imageRegex = /([^\s\']+).(?:jpg|jpeg|gif|png)/i
@@ -136,23 +149,27 @@
         }
         return message
       },
+
       async sendMessage () {
         if (this.content !== '' && this.chatCurrentId) {
+          const name = this.currentUser.name;
           const msg = {text: this.content, type: 'TEXT'};
           if (this.chatCurrent?.talkType === 'GROUP'){
-            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: null, chatId: this.chatCurrentId, toGroup: true});
+            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: this.currentUser.id, toSendId: null, chatId: this.chatCurrentId, toGroup: true, name: name});
           } else {
-            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: this.chatCurrent?.users?.[0]?.userId, chatId: this.chatCurrentId, toGroup: false});
+            await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: this.currentUser.id, toSendId: this.chatCurrent?.users?.[0]?.userId, chatId: this.chatCurrentId, toGroup: false, name: name});
           }
           this.content = ''
         }
       },
+
       scrollToEnd () {
         this.$nextTick(() => {
           var container = this.$el.querySelector('.messages-container')
           container.scrollTop = container.scrollHeight
         })
       },
+
       scrollTo () {
         this.$nextTick(() => {
           let currentHeight = this.$refs.chatContainer.scrollHeight

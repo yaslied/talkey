@@ -1,5 +1,6 @@
 // import * as firebase from 'firebase'
 // import { ClientApi } from '../../api/index';
+const emitter = require('tiny-emitter/instance');
 
 const auth = {
   namespaced: true,
@@ -47,7 +48,7 @@ const auth = {
       let initResponse = null;
       try {
         initResponse = await dispatch('initInstance', null, {root: true});
-        console.log('initResponse', initResponse);
+        // console.log('initResponse', initResponse);
 
          apiInstance = rootState.apiInstance;
 
@@ -59,18 +60,23 @@ const auth = {
       }
 
       const credentials = {'username': payload.username, 'password': payload.password}
-      console.log('auth/logIn', credentials);
+      // console.log('auth/logIn', credentials);
       try {
         let result = await apiInstance.makeLogin(credentials);
-        console.log('auth/logIn result --->', result);
+        // console.log('auth/logIn result --->', result);
 
-        console.log('apiInstance.userId', apiInstance.userId)
         commit('setUser', {
           id: apiInstance.userId || null,
           name: payload.username || null,
         });
         dispatch('setLogged', true, {root: true});
         dispatch('clearError', null, {root: true});
+
+        emitter.on("successLogin", data => {
+          console.log('successLogin', data);
+          commit('setUserId', data.userId);
+          dispatch('chat/loadChats', data.talksResume, {root: true});
+        });
         return result;
 
       } catch (err) {
@@ -78,6 +84,7 @@ const auth = {
         dispatch('setError', err, {root: true});
         dispatch('setLogged', false, {root: true});
       }
+
     },
 
     async logOut ({commit, dispatch, rootState}, payload) {
