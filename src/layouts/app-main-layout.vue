@@ -18,6 +18,10 @@ export default {
       return this.currentUser || null;
     },
 
+    computedName() {
+      return this.currentUser?.name || null;
+    },
+
     computedUid() {
       return this.computedUser?.id || 'undefined';
     },
@@ -62,7 +66,8 @@ export default {
       <div v-else class="container--loaded">
         <div class="app-status">
           <span>socket: {{}}</span>
-          <span>user: {{computedUid}}</span>
+          <span>iname: {{computedName}}</span>
+          <span>id: {{computedUid}}</span>
 
           <button class="force-logout" @click="logout">
             <v-icon color="#ff5052">mid-close-thick</v-icon>

@@ -115,22 +115,22 @@
             console.log(result.data);
           }
 
-            sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
-                this.socket.emit('personMessage', { msg, destId, talkId });
-            }
+          sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
+              this.socket.emit('personMessage', { msg, destId, talkId });
+          }
 
-            startTalk(msg, destId) {
-                this.socket.emit('startPersonTalk', {msg, destId});
-            }
+          startTalk(msg, destId) {
+              this.socket.emit('startPersonTalk', {msg, destId});
+          }
 
-            sendGroupMessage(msg = { text: "mensagem", type: "TEXT" }, talkId) {
-                this.socket.emit('groupMessage', { msg, groupId : talkId });
-            }
+          async sendGroupMessage(msg = { text: "mensagem", type: "TEXT" }, talkId) {
+              this.socket.emit('groupMessage', { msg, groupId : talkId });
+          }
 
-            addToGroup(users, talk) {
-                let data = {group : talk, users };
-                this.socket.emit("groupJoin", data);
-            }
+          addToGroup(users, talk) {
+              let data = {group : talk, users };
+              this.socket.emit("groupJoin", data);
+          }
         }
 
         window.client = new Client();

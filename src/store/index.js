@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 // import * as firebase from 'firebase'
-import { ClientApi } from '../api/index';
+import { ClientApi, apiInstance } from '../api/index';
 import { vm } from '../main'
 
 import AuthModule from './modules/auth'
@@ -69,7 +69,7 @@ export const store = new Vuex.Store({
       // console.log('INIT INSTANCE');
       let instance = null;
       try {
-        instance = await new ClientApi();
+        instance = apiInstance;
         commit('init', instance);
         return {isOk: true};
       } catch (err) {

@@ -66,11 +66,12 @@
     border: 2px solid rgba(#131C21, 0.5);
     min-height: 40px;
   }
-.own {
-  text-align: right;
-  border: 2px solid red;
-  .content {
-    //background-color: lightskyblue;
+
+  .own {
+    text-align: right;
+    border: 2px solid red;
+    .content {
+      //background-color: lightskyblue;
+    }
   }
-}
 </style>

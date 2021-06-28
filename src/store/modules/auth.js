@@ -1,5 +1,6 @@
 // import * as firebase from 'firebase'
 // import { ClientApi } from '../../api/index';
+const emitter = require('tiny-emitter/instance');
 
 const auth = {
   namespaced: true,
@@ -71,8 +72,8 @@ const auth = {
         dispatch('setLogged', true, {root: true});
         dispatch('clearError', null, {root: true});
 
-        apiInstance.socket.on("successLogin", data => {
-          // console.log('successLogin', data);
+        emitter.on("successLogin", data => {
+          console.log('successLogin', data);
           commit('setUserId', data.userId);
           dispatch('chat/loadChats', data.talksResume, {root: true});
         });
