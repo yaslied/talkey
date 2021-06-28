@@ -40,6 +40,7 @@ exports.Connection = class Connection {
         this.groupsIdsBinded = [];
 
         this.userId = user?.user_id || null;
+        this.user = user || {};
 
         if(!this.userId) {
             this.user = null;
@@ -50,7 +51,7 @@ exports.Connection = class Connection {
 
         const talksResume = await talksModel.getTalksForUser(this.userId);
         const groups = talksResume.filter((value => value.type === 'GROUP'))
-        this.socket.emit("successLogin", {userId: this.userId, talksResume: talksResume});
+        this.socket.emit("successLogin", {userId: this.userId, user : this.user, talksResume: talksResume});
         emitterPerson.on(this.userId, this.onEmitterPersonBinded);
 
 
