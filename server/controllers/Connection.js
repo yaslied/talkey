@@ -94,7 +94,7 @@ exports.Connection = class Connection {
             text: obj.msg.text
         }
 
-        emitterPerson.emit(obj.destId, 'personMessage',{fromId: this.userId, msg: msg});
+        emitterPerson.emit(obj.destId, 'personMessage',{fromId: this.userId, msg: msg, sendTimestamp: new Date()});
 
 
         messagesController.createMessage(msg)
@@ -146,7 +146,7 @@ exports.Connection = class Connection {
             text: obj.msg.text
         }
 
-        emitterGroup.emit(obj.groupId, {fromId: this.userId, msg: obj.msg});
+        emitterGroup.emit(obj.groupId, {fromId: this.userId, msg: obj.msg, sendTimestamp: new Date()});
 
         messagesController.createMessage(msg)
     }
