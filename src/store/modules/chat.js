@@ -222,8 +222,8 @@ const chat = {
     async loadUsers({commit, state}){
       console.log('loadUsers')
 
-      const result = await apiInstance?.listUsers();
-      commit('loadUsers', result?.listUsers);
+      const result = await apiInstance.listUsers();
+      commit('loadUsers', result.listUsers);
       commit('loadBlockedUsers', result?.blockedUsers);
       const all = (result?.listUsers || []).concat(result?.blockedUsers || []);
       console.log('all', all)
