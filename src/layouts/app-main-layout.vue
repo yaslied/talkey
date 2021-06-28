@@ -41,6 +41,7 @@ export default {
     async logout (event) {
       console.log("current router", this.routePath);
       try {
+        console.log('Logout main');
         await this.logOut();
       } catch(error) {
         console.error('Logout Error', error);

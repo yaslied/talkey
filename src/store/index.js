@@ -81,7 +81,7 @@ export const store = new Vuex.Store({
     async finishInstance({commit}) {
       console.log('FINISH INSTANCE');
       // commit('finish');
-      commit('setLogged', false);
+      // commit('setLogged', false);
     },
 
     clearError ({commit}) {
@@ -101,6 +101,7 @@ export const store = new Vuex.Store({
       commit('setLogged', payload);
 
       if(!payload) {
+        console.log('here2')
         commit('finish');
         await vm.$router.push({path: '/login'});
       }
@@ -116,5 +117,9 @@ export const store = new Vuex.Store({
     },
   }
 });
+
+
+store.dispatch('auth/initAuth');
+store.dispatch('chat/initChat');
 
 export default store;

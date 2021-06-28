@@ -1,5 +1,7 @@
 // import * as firebase from 'firebase'
 // import { ClientApi } from '../../api/index';
+import { apiInstance } from '../../api/index';
+
 const emitter = require('tiny-emitter/instance');
 
 const auth = {
@@ -24,8 +26,28 @@ const auth = {
   },
 
   actions: {
-    async initAuth({commit}) {
+    async initAuth({commit, dispatch}) {
       commit('init');
+      console.log('initAuth');
+
+      emitter.on("successLogin", data => {
+        console.log('successLogin action', data);
+        commit('setUser', data.user || {id: data.userId});
+        commit('setUserId', data.userId);
+        dispatch('chat/loadChats', data.talksResume, {root: true});
+        dispatch('setLogged', true, { root: true });
+      });
+      
+      if(apiInstance.successLoginTmp) {
+        console.log('successLogin if', data);
+
+        commit('setUser', data.user || {id: apiInstance.successLoginTmp.userId});
+        commit('setUserId', apiInstance.successLoginTmp.userId);
+        dispatch('chat/loadChats', apiInstance.successLoginTmp.talksResume, {root: true});
+        dispatch('setLogged', true, { root: true });
+      }
+
+
     },
 
     async register ({dispatch}, payload) {
@@ -72,11 +94,10 @@ const auth = {
         dispatch('setLogged', true, {root: true});
         dispatch('clearError', null, {root: true});
 
-        emitter.on("successLogin", data => {
-          console.log('successLogin', data);
-          commit('setUserId', data.userId);
-          dispatch('chat/loadChats', data.talksResume, {root: true});
-        });
+        
+
+        
+
         return result;
 
       } catch (err) {
@@ -91,8 +112,12 @@ const auth = {
       dispatch('setLoading', true, {root: true});
 
       try {
+        console.log('here')
         await dispatch('finishInstance', null, { root: true });
         dispatch('clearError',null, {root: true});
+        sessionStorage.removeItem('chats');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('tokenMyApplication');
         dispatch('setLogged', false, { root: true });
       } catch (err) {
         console.error('Error on Logout', err);

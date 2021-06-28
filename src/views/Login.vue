@@ -1,5 +1,5 @@
 <script>
-import { authMethods, authComputed } from '@state/helpers';
+import { authMethods, authComputed, rootComputed } from '@state/helpers';
 
 import BaseInput from '@components/base-input';
 
@@ -23,10 +23,14 @@ export default {
 
   computed: {
     ...authComputed,
+    ...rootComputed,
   },
 
   watch: {
-
+      isLoggedin() {
+        console.log('Estou aqui');
+        this.$router.push({path: '/'});
+      }
   },
 
   methods: {

@@ -1,9 +1,9 @@
 
 <script>
   import Message from '@components/Chat/parts/Message.vue';
-  import EmojiPicker from '@components/Chat/parts/EmojiPicker.vue';
   import {authComputed, chatComputed} from "@state/helpers";
 
+  const emitter = require('tiny-emitter/instance');
   
   // import * as firebase from 'firebase'
   export default {
@@ -12,12 +12,9 @@
       return {
         content: '',
         chatMessages: [],
-        emojiPanel: false,
         currentRef: {},
         loading: false,
         totalChatHeight: 0,
-
-        ref: null,
       }
     },
 
@@ -25,21 +22,12 @@
       'id'
     ],
 
-    sockets: {
-      connect() {
-        console.log('$socket.connect');
-      }
-    },
-
     async beforeMount () {
-      this.loadChat();
-      this.ref = this.$store.state["chat/chatInstance"];
-      // this.$store.dispatch('loadOnlineUsers')
+      
     },
 
     components: {
       'message': Message,
-      'emoji-picker': EmojiPicker,
     },
 
     computed: {
@@ -51,62 +39,26 @@
       },
 
       messages () {
+        console.log('change messages');
         const messages = (this.chatCurrentMessages || []).map(msg => {
           msg.name = (this.allUsers.find(user => msg.sender_id === user.id) || {}).username || 'indefinido';
           return msg;
         })
         return messages;
       },
-
-      onNewMessageAdded () {
-        const that = this;
-
-        emitter.on('personSentMessage', function (arg) {
-          console.log('Recebi uma msg', arg);
-        });
-
-          // let message = snapshot.val()
-          // message.key = snapshot.key
-          // /*eslint-disable */
-          // var urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
-          // /*eslint-enable */
-          // message.content = message.content
-          //   .replace(/&/g, '&amp;')
-          //   .replace(/</g, '&lt;')
-          //   .replace(/>/g, '&gt;')
-          //   .replace(/"/g, '&quot;')
-          //   .replace(/'/g, '&#039;')
-          // message.content = message.content.replace(urlPattern, "<a href='$1'>$1</a>")
-          // if (!newMessage) {
-          //   that.chatMessages.unshift(that.processMessage(message))
-          //   that.scrollTo()
-          // } else {
-          //   that.chatMessages.push(that.processMessage(message))
-          //   that.scrollToEnd()
-          // }
-        
-        return 'onNewMessageAdded';
-      }
     },
 
     watch: {
-      '$route.params.id' (newId, oldId) {
-        this.currentRef.off('child_added', this.onNewMessageAdded)
-        this.loadChat()
-      },
-
+      messages() {
+        console.log('change messages');
+        this.scrollToEnd();
+      }
     },
 
     methods: {
       loadChat () {
         this.totalChatHeight = this.$refs.chatContainer?.scrollHeight
         this.loading = false
-        if (this.id !== undefined) {
-          this.chatMessages = []
-          let chatID = this.id
-          this.currentRef = firebase.database().ref('messages').child(chatID).child('messages').limitToLast(20)
-          this.currentRef.on('child_added', this.onNewMessageAdded)
-        }
       },
 
       onScroll () {
@@ -121,18 +73,6 @@
             this.loading = false
             return
           }
-          firebase.database().ref('messages').child(chatID).child('messages').orderByKey().endAt(currentTopMessage.key).limitToLast(20).once('value').then(
-            function (snapshot) {
-              let tempArray = []
-              snapshot.forEach(function (item) {
-                tempArray.push(item)
-              })
-              if (tempArray[0].key === tempArray[1].key) return
-              tempArray.reverse()
-              tempArray.forEach(function (child) { that.onNewMessageAdded(child, false) })
-              that.loading = false
-            }
-          )
         }
       },
 
@@ -159,15 +99,14 @@
           } else {
             await this.$store.dispatch('chat/sendMessage', {msg: msg, userId: this.currentUser.id, toSendId: this.chatCurrent?.users?.[0]?.userId, chatId: this.chatCurrentId, toGroup: false, name: name});
           }
-          this.content = ''
+          this.content = '';
+          this.scrollToEnd()
         }
       },
 
       scrollToEnd () {
-        this.$nextTick(() => {
-          var container = this.$el.querySelector('.messages-container')
-          container.scrollTop = container.scrollHeight
-        })
+        const container = this.$refs.chatContainer;
+        container.scrollTop = container.scrollHeight - container.clientHeight;
       },
 
       scrollTo () {
@@ -191,16 +130,16 @@
 <template>
   <div class="chatMessager">
     <div class="messages-container" v-on:scroll="onScroll" ref="chatContainer" >
-      <message v-for="(message, index) in messages" :key="index" class="message" :message="message" @imageLoad="scrollToEnd"></message>
+      <message v-for="(message, index) in messages" :key="index" class="message" :message="message" @change="scrollToEnd"></message>
     </div>
     
-    <emoji-picker :show="emojiPanel" @close="toggleEmojiPanel" @click="addEmojiToMessage"></emoji-picker>
+    <!-- <emoji-picker :show="emojiPanel" @close="toggleEmojiPanel" @click="addEmojiToMessage"></emoji-picker> -->
     
     <div class="typer-container">
       <input type="text" placeholder="type here..." v-on:keyup.enter="sendMessage" v-model="content">
       <div class="emoji-panel">
-        <v-btn icon class="blue--text button--emoji" @click="toggleEmojiPanel">
-          <v-icon class="button-icon text-white">mdi-emoticon-outline</v-icon>
+        <v-btn icon class="blue--text button--emoji" @click="sendMessage">
+          <v-icon class="button-icon text-white">mdi-send-outline</v-icon>
         </v-btn>
       </div>
     </div>
@@ -212,7 +151,7 @@
 
 .scrollable {
   overflow-y: auto;
-  height: 90vh;
+  height: 80vh;
 }
 
 .chatMessager {
@@ -222,7 +161,8 @@
 
 .messages-container {
   box-sizing: border-box;
-  height: calc(100vh - 9.5rem);
+  flex: 1 1 0;
+  height: calc(95vh - 9rem);
   overflow-y: auto;
   padding: 10px;
   background-color: transparent;
@@ -251,6 +191,7 @@
 .typer-container {
   box-sizing: border-box;
   display: flex;
+  flex: 0 1 1;
   align-items: center;
   bottom: 0;
   height: 4.9rem;

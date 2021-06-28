@@ -1,11 +1,11 @@
 // import * as firebase from 'firebase'
 
 const emitter = require('tiny-emitter/instance');
+import { apiInstance } from '../../api/index';
 
 const chat = {
   namespaced: true,
   state: {
-    chatInstance: null,
     onlineUsers: [],
     blockedContacts: [],
     allUsers: [],
@@ -50,10 +50,6 @@ const chat = {
   },
 
   mutations: {
-    chatInstance(state, payload) {
-      state.chatInstance = payload;
-    },
-
     pushMessage (state, msg) {
       state.currentMessages.push(msg);
       // console.log('state.currentMessages', state.currentMessages)
@@ -121,40 +117,50 @@ const chat = {
     async initChat({dispatch, commit, rootState}) {
       dispatch('setLoading', true, {root: true});
 
-      let apiInstance = null;
-      if(rootState.isLoggedin && rootState.apiInstance !== null) {
-        try {
-          apiInstance = rootState.apiInstance;
-          commit('chatInstance', apiInstance);
-
-          emitter.on('personSentMessage', function (data) {
-            console.log('Recebi uma msg', data);
-            let date = new Date();
-            date = date.toISOString();
-            const auxMsg = {
-              name: 'name',
-              send_timestamp: date,
-              sender_id: data.msg.senderId,
-              talk_id: data.msg.talkId,
-              text: data.msg.text,
-              type: data.msg.type,
-            }
-            // console.log('data', auxMsg)
-            commit('pushMessage', auxMsg);
-          });
-    
-          emitter.on('groupSentMessage', function (arg) {
-            console.log('Recebi uma msg', arg);
-          });
-
-        } catch (error) {
-          dispatch('setError', error, {root: true});
-          await dispatch('finishInstance', null, {root: true});
+      emitter.on('personSentMessage', function (data) {
+        console.log('Recebi uma msg', data);
+        let date = moment(data.sendTimestamp).format('DD/MM/YYYY');
+        const auxMsg = {
+          name: 'name',
+          send_timestamp: date,
+          sender_id: data.msg.senderId,
+          talk_id: data.msg.talkId,
+          text: data.msg.text,
+          type: data.msg.type,
         }
+        // console.log('data', auxMsg)
+        commit('pushMessage', auxMsg);
+      });
 
-      } else {
-       dispatch('auth/logOut', null, {root:true});
-      }
+      emitter.on('groupSentMessage', function (data) {
+        console.log('Recebi uma msg', data);
+        let date = moment(data.sendTimestamp).format('DD/MM/YYYY');
+        const auxMsg = {
+          name: 'name',
+          send_timestamp: date,
+          sender_id: data.msg.senderId,
+          talk_id: data.msg.talkId,
+          text: data.msg.text,
+          type: data.msg.type,
+        }
+        // console.log('data', auxMsg)
+        commit('pushMessage', auxMsg);
+      });
+
+
+      // if(rootState.isLoggedin && apiInstance !== null) {
+      //   try {
+
+          
+      //   } catch (error) {
+      //     dispatch('setError', error, {root: true});
+      //     await dispatch('finishInstance', null, {root: true});
+      //   }
+
+      // } else {
+      //   console.log('logout on dispatch')
+      //  dispatch('auth/logOut', null, {root:true});
+      // }
 
       dispatch('setLoading', false, {root: true});
     },
@@ -167,7 +173,7 @@ const chat = {
         return false;
       }
       if(chatId!==state.currentId) {
-        chat.messages = await state.chatInstance.getTalkMessages(chatId);
+        chat.messages = await apiInstance.getTalkMessages(chatId);
       }
       commit('setCurrent', chat);
     },
@@ -196,11 +202,10 @@ const chat = {
       }
       // console.log('msg', auxMsg)
       if (toGroup){
-
-        // emitter.emit('sendGroupMessage', {msg, chatId});
-        await state.chatInstance.sendGroupMessage(msg, chatId)
+        console.log('TO GROUP');
+        await apiInstance.sendGroupMessage(msg, chatId)
       } else {
-        await state.chatInstance.sendPersonMessage(msg, toSendId, chatId)
+        await apiInstance.sendPersonMessage(msg, toSendId, chatId)
       }
       commit('pushMessage', auxMsg);
     },
@@ -217,7 +222,7 @@ const chat = {
     async loadUsers({commit, state}){
       console.log('loadUsers')
 
-      const result = await state.chatInstance?.listUsers();
+      const result = await apiInstance?.listUsers();
       commit('loadUsers', result?.listUsers);
       commit('loadBlockedUsers', result?.blockedUsers);
       const all = (result?.listUsers || []).concat(result?.blockedUsers || []);

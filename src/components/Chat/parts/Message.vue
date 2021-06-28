@@ -41,13 +41,11 @@
 <template>
   <div>
     <div class="message"  :class="{own: own}">
-      {{'own: ' +own}}
-      <div class="username" v-if="!own">{{message.name}}</div>
 <!--      <div class="username" v-if="index == 0">{{message.user}}</div>-->
-      <div style="margin-top: 5px"></div>
       <div class="content">
-        <div v-if="message.type === 'TEXT'" v-html="message.text"></div>
-        <chat-image v-if="message.type === 'IMAGE'" :imgsrc="message.image" @imageLoad="imageLoad"></chat-image>
+        <div class="username" v-if="!own">{{message.name}}</div>
+        <span v-if="message.type === 'TEXT'">{{message.text}}</span>
+        <!-- <chat-image v-if="message.type === 'IMAGE'" :imgsrc="message.image" @imageLoad="imageLoad"></chat-image> -->
       </div>
     </div>
   </div>
@@ -62,16 +60,63 @@
   }
 
   .message {
-    margin-bottom: 3px;
-    border: 2px solid rgba(#131C21, 0.5);
-    min-height: 40px;
+    margin-bottom: 8px;
+    padding: 0;
+    width: 100%;
+    display: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    .content {
+      background: rgba(#2B5580, .7);
+      display: row;
+      align-items: center;
+      justify-content: flex-end;
+      border: 1px solid rgba(#131C21, 0.2);
+      border-radius: 10px 10px 10px 0;
+      padding: 8px 16px;
+      margin: 0 auto 0 0;
+      min-height: 30px;
+      width: fit-content;
+      min-width: 150px;
+      
+      .username {
+        font-size: 12px;
+        font-weight: 500;
+        color: #FFD717;
+        letter-spacing: 0.5px;
+        line-height: 1em;
+        margin: 0 0 8px 0;
+      }
+      
+      span {
+        font-size: 16px;
+        color: #fff;
+        letter-spacing: 0.5px;
+      }
+
+    }
   }
 
   .own {
     text-align: right;
-    border: 2px solid red;
+    justify-content: flex-start;
+    align-items: flex-end;
+
     .content {
+      background: rgba(#054280, .3) !important;
+      align-items: center;
+      border: 1px solid rgba(#131C21, 0.2);
+      border-radius: 10px 10px 0 10px !important;
+      min-height: 50px;
+      margin: 0 0 0 auto;
       //background-color: lightskyblue;
+      span {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: 0.5px;
+      }
     }
   }
 </style>

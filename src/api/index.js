@@ -9,6 +9,8 @@ export class ClientApi {
   axios = null;
   userId = null;
 
+  successLoginTmp = null;
+
   constructor() {
     this.axios = axios;
     this.token = sessionStorage.getItem('tokenMyApplication') || null;
@@ -27,6 +29,10 @@ export class ClientApi {
   }
 
   startListeners() {
+    this.socket.onAny((eventName, data) => {
+      console.log('all', eventName, data);
+    });
+
     this.socket.on("connect", () => {
         // this.socket.emit("chatJoin", 'ASDSDSFSDF');
     });
@@ -37,7 +43,7 @@ export class ClientApi {
     });
 
     this.socket.on("groupSentMessage", data => {
-        // console.log('groupSentMessage', data);
+        console.log('groupSentMessage', data);
         emitter.emit('groupSentMessage', data);
     });
 
@@ -47,6 +53,7 @@ export class ClientApi {
       sessionStorage.setItem('chats', JSON.stringify(data.talksResume));
         // console.log('successLogin', data);
       emitter.emit('successLogin', data);
+      this.successLoginTmp = data;
     });
     this.socket.on("error", data => {
         console.log('error recebido', data);
@@ -101,12 +108,12 @@ export class ClientApi {
     return {};
   }
 
-  sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
-    this.socket.emit('personMessage', { msg, destId, talkId });
-  }
-
   startTalk(msg, destId) {
     this.socket.emit('startPersonTalk', {msg, destId});
+  }
+
+  sendPersonMessage(msg = { text: "mensagem", type: "TEXT" }, destId, talkId) {
+    this.socket.emit('personMessage', { msg, destId, talkId });
   }
 
   sendGroupMessage(msg = { text: "mensagem", type: "TEXT" }, talkId) {
